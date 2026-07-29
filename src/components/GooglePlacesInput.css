@@ -1,0 +1,193 @@
+/* ============================================================
+   GOOGLE PLACES INPUT
+   Uses same CSS variables as the rest of the app
+============================================================ */
+
+.gp-field {
+  margin-bottom: 16px;
+}
+
+.gp-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 6px;
+  letter-spacing: 0.01em;
+  font-family: var(--font);
+}
+
+.gp-req {
+  color: var(--accent);
+  margin-left: 2px;
+}
+
+/* ── Input wrapper ── */
+.gp-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--surface);
+  transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+  overflow: visible;
+}
+
+.gp-wrap:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-08);
+}
+
+.gp-wrap.gp-err {
+  border-color: #EF4444;
+}
+
+.gp-wrap.gp-err:focus-within {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.10);
+}
+
+.gp-wrap.gp-disabled {
+  background: #F8F9FC;
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+/* Map pin icon */
+.gp-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--accent);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+/* Input itself */
+.gp-input {
+  width: 100%;
+  font-family: var(--font);
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--text-1);
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 10px 36px 10px 34px;
+}
+
+.gp-input::placeholder {
+  color: var(--text-3);
+  font-weight: 400;
+}
+
+.gp-input:disabled {
+  cursor: not-allowed;
+}
+
+/* Clear button */
+.gp-clear {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  border: none;
+  background: var(--navy-06);
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-3);
+  transition: all var(--dur) var(--ease);
+  flex-shrink: 0;
+  padding: 0;
+}
+
+.gp-clear:hover {
+  background: #EF4444;
+  color: #fff;
+}
+
+/* Selected preview */
+.gp-preview {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 5px;
+  padding: 4px 10px;
+  background: var(--accent-08);
+  border-radius: var(--r-xs);
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.gp-preview-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Error text */
+.gp-err-txt {
+  font-size: 11.5px;
+  color: #EF4444;
+  font-weight: 500;
+  margin-top: 5px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font);
+}
+
+/* ── Google Autocomplete dropdown override ── */
+/* Make dropdown match our design */
+.pac-container {
+  font-family: var(--font, 'Plus Jakarta Sans', sans-serif) !important;
+  border: 1px solid var(--border, #E2E8F0) !important;
+  border-radius: 10px !important;
+  box-shadow: 0 8px 32px rgba(12, 16, 54, 0.12) !important;
+  margin-top: 4px !important;
+  overflow: hidden !important;
+  background: #fff !important;
+}
+
+.pac-item {
+  font-size: 13px !important;
+  font-family: var(--font, 'Plus Jakarta Sans', sans-serif) !important;
+  padding: 10px 14px !important;
+  color: #0C1036 !important;
+  cursor: pointer !important;
+  border-top: 1px solid #F1F3F8 !important;
+  transition: background 0.14s ease !important;
+}
+
+.pac-item:first-child {
+  border-top: none !important;
+}
+
+.pac-item:hover,
+.pac-item-selected {
+  background: rgba(67, 97, 238, 0.06) !important;
+}
+
+.pac-item-query {
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  color: #0C1036 !important;
+}
+
+.pac-icon {
+  display: none !important;
+}
+
+.pac-matched {
+  color: #386CFF !important;
+  font-weight: 700 !important;
+}
