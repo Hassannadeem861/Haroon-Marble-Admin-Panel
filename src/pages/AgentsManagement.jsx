@@ -199,11 +199,11 @@ const AgentsManagement = () => {
       {/* HEADER */}
       <div className="ag-page-hd">
         <div>
-          <h1 className="ag-page-title">Agents Management</h1>
-          <p className="ag-page-sub">Verify, suspend and manage real estate agents</p>
+          <h1 className="ag-page-title">Worker Management</h1>
+          <p className="ag-page-sub">Verify, suspend and manage real estate worker</p>
         </div>
         <button className="ag-create-btn" onClick={() => setShowCreate(true)}>
-          <Plus size={14} strokeWidth={2.5} /> Add Agent
+          <Plus size={14} strokeWidth={2.5} /> Add Worker
         </button>
       </div>
 
