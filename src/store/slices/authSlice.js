@@ -1,19 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { loginAsync, logoutAsync, checkAuthAsync } from "../services/authService";
+import { loginAsync, logoutAsync } from "../services/authService";
 import { asyncStatus } from "../../utils/asyncStatus";
 import { SAVE_TOKENS_CONSTANT } from "../../utils/constant";
 
 // ─────────────────────────────────────────────
 // TOKEN HELPERS
+// There is no refresh token in this API — only a single access token.
 // ─────────────────────────────────────────────
-const saveTokens = (token, refreshToken) => {
+const saveToken = (token) => {
   if (token) localStorage.setItem(SAVE_TOKENS_CONSTANT.ACCESS_TOKEN, token);
-  if (refreshToken) localStorage.setItem(SAVE_TOKENS_CONSTANT.REFRESH_TOKEN, refreshToken);
 };
 
 export const clearTokens = () => {
   localStorage.removeItem(SAVE_TOKENS_CONSTANT.ACCESS_TOKEN);
-  localStorage.removeItem(SAVE_TOKENS_CONSTANT.REFRESH_TOKEN);
 };
 
 // ─────────────────────────────────────────────
@@ -24,7 +23,6 @@ const initialState = {
   user_data: null,
   user_auth: !!localStorage.getItem(SAVE_TOKENS_CONSTANT.ACCESS_TOKEN),
   accessToken: localStorage.getItem(SAVE_TOKENS_CONSTANT.ACCESS_TOKEN) || null,
-  refreshToken: localStorage.getItem(SAVE_TOKENS_CONSTANT.REFRESH_TOKEN) || null,
   user_role: null,
 
   // Login
@@ -50,12 +48,11 @@ const userAuthSlice = createSlice({
   initialState,
 
   reducers: {
-    // Sync logout — use the axios interceptor in 401 response
+    // Sync logout — used by the axios 401 interceptor
     logout: (state) => {
       state.user_data = null;
       state.user_auth = false;
       state.accessToken = null;
-      state.refreshToken = null;
       state.user_role = null;
       state.login_status = asyncStatus.IDLE;
       clearTokens();
@@ -75,8 +72,8 @@ const userAuthSlice = createSlice({
   },
 
   extraReducers: (builder) => {
-
     // =========>>>>>>> Login <<<<<===========
+    // Real response shape: { message, user, token }
 
     builder.addCase(loginAsync.pending, (state) => {
       state.login_status = asyncStatus.LOADING;
@@ -84,17 +81,15 @@ const userAuthSlice = createSlice({
     });
 
     builder.addCase(loginAsync.fulfilled, (state, { payload }) => {
-      // console.log("payload: ",payload)
       state.login_status = asyncStatus.SUCCEEDED;
       state.login_data = payload;
 
-      if (payload?.success && payload?.data?.admin) {
-        state.user_data = payload.data.admin;
-        state.user_role = payload.data.admin?.role;
-        state.accessToken = payload.data.accessToken;
-        state.refreshToken = payload.data.refreshToken;
+      if (payload?.user && payload?.token) {
+        state.user_data = payload.user;
+        state.user_role = payload.user?.role ?? null;
+        state.accessToken = payload.token;
         state.user_auth = true;
-        saveTokens(payload.data.accessToken, payload.data.refreshToken);
+        saveToken(payload.token);
       }
     });
 
@@ -105,6 +100,8 @@ const userAuthSlice = createSlice({
     });
 
     // =========>>>>>>> Logout <<<<<===========
+    // NOTE: update this once the real /logout response shape is confirmed —
+    // kept structurally the same as before, minus refresh-token cleanup.
 
     builder.addCase(logoutAsync.pending, (state) => {
       state.logout_auth_status = asyncStatus.LOADING;
@@ -115,7 +112,6 @@ const userAuthSlice = createSlice({
       state.user_data = null;
       state.user_auth = false;
       state.accessToken = null;
-      state.refreshToken = null;
       state.user_role = null;
       clearTokens();
     });
@@ -123,46 +119,40 @@ const userAuthSlice = createSlice({
     builder.addCase(logoutAsync.rejected, (state, { payload }) => {
       state.logout_auth_status = asyncStatus.ERROR;
       state.logout_auth_error = payload;
-      // clear the error
       state.user_data = null;
       state.user_auth = false;
       state.accessToken = null;
-      state.refreshToken = null;
       clearTokens();
     });
 
     // =========>>>>>>> Check Auth <<<<<===========
+    // NOTE: update this once the real /check-auth response shape is
+    // confirmed — currently assumed to mirror login's `user` shape.
 
-    builder.addCase(checkAuthAsync.pending, (state) => {
-      state.check_auth_status = asyncStatus.LOADING;
-    });
+    // builder.addCase(checkAuthAsync.pending, (state) => {
+    //   state.check_auth_status = asyncStatus.LOADING;
+    // });
 
-    builder.addCase(checkAuthAsync.fulfilled, (state, { payload }) => {
-      state.check_auth_status = asyncStatus.SUCCEEDED;
-      state.check_auth_data = payload;
+    // builder.addCase(checkAuthAsync.fulfilled, (state, { payload }) => {
+    //   state.check_auth_status = asyncStatus.SUCCEEDED;
+    //   state.check_auth_data = payload;
 
-      if (payload?.success && payload?.data) {
-        state.user_data = payload.data;
-        state.user_role = payload.data?.role;
-        state.user_auth = true;
-      }
-    });
+    //   if (payload?.user) {
+    //     state.user_data = payload.user;
+    //     state.user_role = payload.user?.role ?? null;
+    //     state.user_auth = true;
+    //   }
+    // });
 
-    builder.addCase(checkAuthAsync.rejected, (state, { payload }) => {
-      state.check_auth_status = asyncStatus.ERROR;
-      state.check_auth_error = payload;
-      state.user_auth = false;
-      state.user_data = null;
-      clearTokens();
-    });
+    // builder.addCase(checkAuthAsync.rejected, (state, { payload }) => {
+    //   state.check_auth_status = asyncStatus.ERROR;
+    //   state.check_auth_error = payload;
+    //   state.user_auth = false;
+    //   state.user_data = null;
+    //   clearTokens();
+    // });
   },
 });
 
-export const {
-  logout,
-  setLoginStatus,
-  setLogoutStatus,
-  setCheckAuthStatus,
-} = userAuthSlice.actions;
-
+export const { logout, setLoginStatus, setLogoutStatus, setCheckAuthStatus } = userAuthSlice.actions;
 export default userAuthSlice.reducer;

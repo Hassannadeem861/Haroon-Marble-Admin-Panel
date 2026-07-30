@@ -29,7 +29,7 @@ const AppRoutes = () => {
       <Route
         path="/dashboard"
         element={
-          <ProtectedRoute allowedRoles={['superAdmin', 'admin']}>
+          <ProtectedRoute>
             <AdminLayout>
               <Dashboard />
             </AdminLayout>
@@ -40,7 +40,7 @@ const AppRoutes = () => {
       <Route
         path="/users"
         element={
-          <ProtectedRoute allowedRoles={['superAdmin', 'admin']}>
+          <ProtectedRoute>
             <AdminLayout>
               <AgentsManagement />
             </AdminLayout>
@@ -55,7 +55,7 @@ const AppRoutes = () => {
       <Route
         path="/profile"
         element={
-          <ProtectedRoute allowedRoles={['superAdmin', 'admin']}>
+          <ProtectedRoute>
             <AdminLayout>
               <AdminProfile />
             </AdminLayout>

@@ -26,7 +26,6 @@ const AdminProfile = () => {
     email: user_data?.email || "",
     phone: user_data?.phone || "123323232323",
   });
-  console.log(profile.phone)
   const [profileMsg,  setProfileMsg]  = useState(null); // { type: 'success'|'error', text }
   const [profileSaving, setProfileSaving] = useState(false);
 

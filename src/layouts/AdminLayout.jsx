@@ -21,8 +21,8 @@ import { asyncStatus } from "../utils/asyncStatus";
 import { ConfirmModal } from "../components/Modal";
 import "./AdminLayout.css";
 
-import logoFull from "../assets/image/logo.png";
-import logoIcon from "../assets/image/mobilelogo.png";
+// import logoFull from "../assets/image/logo.png";
+// import logoIcon from "../assets/image/mobilelogo.png";
 
 // ─── NAV CONFIG ─────────────────────────────────────────────
 const NAV_SECTIONS = [

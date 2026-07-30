@@ -1,181 +1,122 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { Formik } from "formik";
-import { Eye, EyeOff, AlertCircle } from "lucide-react";
+import { Form, Input, Button, Alert, Row, Col, Typography } from "antd";
+import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 import { loginAsync } from "../store/services/authService.js";
 import { setLoginStatus } from "../store/slices/authSlice.js";
 import { asyncStatus } from "../utils/asyncStatus";
-import { getValidationSchema } from "../utils/validationSchema.js";
-import { ButtonLoader } from "../components/Loading.jsx";
-import './style.css'
+import "./style.css";
+
+const { Title, Text } = Typography;
 
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [showPassword, setShowPassword] = useState(false);
+  const [form] = Form.useForm();
 
   const { login_status, login_error } = useSelector((state) => state.auth);
-  const loader = login_status === asyncStatus.LOADING;
+  const loading = login_status === asyncStatus.LOADING;
 
   useEffect(() => {
     if (login_status === asyncStatus.SUCCEEDED) {
       navigate("/dashboard", { replace: true });
       dispatch(setLoginStatus());
     }
-  }, [login_status]);
+  }, [login_status, navigate, dispatch]);
 
-  const initialValues = {
-    email: "",
-    password: "",
-    // role: "super_admin",
-  };
-
-  const handleLogin = (values) => {
-    dispatch(loginAsync({ email: values.email, password: values.password }));
+  const handleFinish = (values) => {
+    dispatch(loginAsync({ email: values.email.trim(), password: values.password }));
   };
 
   return (
-    <>
-      <div className="root">
-
+    <div className="login-root">
+      <Row className="login-row">
         {/* ── LEFT — Form ── */}
-        <div className="left">
-          <div className="form-box">
-            <h1 className="title">Welcome Back</h1>
-            <p className="subtitle">Sign in to your Haroon Marble admin account.</p>
+        <Col xs={24} md={12} className="login-left">
+          <div className="login-form-box">
+            <Title level={2} className="login-title">
+              Welcome Back
+            </Title>
+            <Text className="login-subtitle">Sign in to your Haroon Marble admin account.</Text>
 
-            {/* API Error Banner */}
             {login_error && (
-              <div className="error-banner">
-                <AlertCircle size={15} />
-                {login_error}
-              </div>
+              <Alert
+                type="error"
+                showIcon
+                message={typeof login_error === "string" ? login_error : "Login failed"}
+                className="login-error-banner"
+              />
             )}
 
-            <Formik
-              initialValues={initialValues}
-              validationSchema={getValidationSchema('login')}
-              onSubmit={handleLogin}
+            <Form
+              form={form}
+              layout="vertical"
+              requiredMark={false}
+              onFinish={handleFinish}
+              className="login-form"
+              disabled={loading}
             >
-              {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
-                <form onSubmit={handleSubmit}>
+              <Form.Item
+                label="Email"
+                name="email"
+                rules={[
+                  { required: true, message: "Email is required" },
+                  { type: "email", message: "Enter a valid email address" },
+                ]}
+              >
+                <Input
+                  size="large"
+                  prefix={<Mail size={16} />}
+                  placeholder="info@gmail.com"
+                  autoComplete="email"
+                />
+              </Form.Item>
 
-                  {/* Role */}
-                  {/* <div className="field">
-                    <label className="label">
-                      Role <span className="req">*</span>
-                    </label>
-                    <select
-                      name="role"
-                      className="input"
-                      value={values.role}
-                      onChange={handleChange("role")}
-                      onBlur={handleBlur("role")}
-                    >
-                      <option value="super_admin">Super Admin</option>
-                      <option value="location_manager">Location Manager</option>
-                    </select>
-                  </div> */}
+              <Form.Item
+                label="Password"
+                name="password"
+                rules={[{ required: true, message: "Password is required" }]}
+              >
+                <Input.Password
+                  size="large"
+                  prefix={<Lock size={16} />}
+                  placeholder="Enter your password"
+                  autoComplete="current-password"
+                  iconRender={(visible) => (visible ? <EyeOff size={16} /> : <Eye size={16} />)}
+                />
+              </Form.Item>
 
-                  {/* Email */}
-                  <div className="field">
-                    <label className="label">
-                      Email <span className="req">*</span>
-                    </label>
-                    <input
-                      name="email"
-                      type="email"
-                      autoComplete="email"
-                      placeholder="info@gmail.com"
-                      className={`input ${touched.email && errors.email ? "input-err" : ""}`}
-                      value={values.email}
-                      onChange={handleChange("email")}
-                      onBlur={handleBlur("email")}
-                      disabled={loader}
-                    />
-                    {touched.email && errors.email && (
-                      <p className="err-text">{errors.email}</p>
-                    )}
-                  </div>
-
-                  {/* Password */}
-                  <div className="field">
-                    <label className="label">
-                      Password <span className="req">*</span>
-                    </label>
-                    <div className="pw-wrap">
-                      <input
-                        name="password"
-                        type={showPassword ? "text" : "password"}
-                        autoComplete="current-password"
-                        placeholder="Enter your password"
-                        className={`input pw-input ${touched.password && errors.password ? "input-err" : ""}`}
-                        value={values.password}
-                        onChange={handleChange("password")}
-                        onBlur={handleBlur("password")}
-                      disabled={loader}
-                      />
-                      <button
-                        type="button"
-                        className="eye-btn"
-                        onClick={() => setShowPassword((p) => !p)}
-                        tabIndex={-1}
-                      >
-                        {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                      </button>
-                    </div>
-                    {touched.password && errors.password && (
-                      <p className="err-text">{errors.password}</p>
-                    )}
-                  </div>
-
-                  {/* Submit */}
-                  <button
-                    type="submit"
-                    className="submit-btn"
-                    disabled={loader}
-                  >
-                    {loader ? (
-                      <span className="btn-inner">
-                        <ButtonLoader size={18} color="#ffffff" />
-                        <span>Signing in...</span>
-                      </span>
-                    ) : (
-                      "Sign in"
-                    )}
-                  </button>
-
-                </form>
-              )}
-            </Formik>
+              <Form.Item className="login-submit-item">
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  size="large"
+                  block
+                  loading={loading}
+                  className="login-submit-btn"
+                >
+                  {loading ? "Signing in..." : "Sign in"}
+                </Button>
+              </Form.Item>
+            </Form>
           </div>
-        </div>
+        </Col>
 
-        {/* ── RIGHT — Brand ── */}
-        <div className="right">
-          <div className="dots" />
-          <div className="right-brand">
-            <div className="right-icon">
-              <img src="/logo.png" alt="Haroon Marble" style={{ width: 150, height: 150, objectFit: "contain" }} />
-            </div>
-            <div className="right-title">
+        {/* ── RIGHT — Brand (hidden on mobile/tablet) ── */}
+        <Col xs={0} md={12} className="login-right">
+          <div className="login-dots" aria-hidden="true" />
+          <div className="login-brand">
+            <img src="/logo.png" alt="Haroon Marble" className="login-logo" />
+            <div className="login-brand-title">
               Haroon Marble
               <span>Admin Panel</span>
             </div>
-            {/* <p className="right-tagline">Connect top agents with the right clients — manage your platform with ease.</p>
-            <div className="right-pills">
-              <div className="right-pill"><span className="right-pill-dot" />Manage Agents &amp; Clients</div>
-              <div className="right-pill"><span className="right-pill-dot" />Monitor Compatibility Matches</div>
-              <div className="right-pill"><span className="right-pill-dot" />Real-time Platform Insights</div>
-            </div> */}
           </div>
-        </div>
-
-      </div>
-    </>
+        </Col>
+      </Row>
+    </div>
   );
 };
-
 
 export default Login;

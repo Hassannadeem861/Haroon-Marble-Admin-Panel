@@ -7,7 +7,7 @@ export const loginAsync = createAsyncThunk(
   typeConstants.LOGIN,
   async (payload, { rejectWithValue }) => {
     try {
-      const response = await apiHandle.post("admin/login", payload);
+      const response = await apiHandle.post("/login", payload);
       return response.data;
     } catch (error) {
       return rejectWithValue(
@@ -17,32 +17,15 @@ export const loginAsync = createAsyncThunk(
   }
 );
 
-// =========>>>>>>> Logout <<<<<===========
 export const logoutAsync = createAsyncThunk(
   typeConstants.LOGOUT_AUTH,
   async (_, { rejectWithValue }) => {
     try {
-      const refreshToken = localStorage.getItem(SAVE_TOKENS_CONSTANT.REFRESH_TOKEN);
-      const response = await apiHandle.post("admin/logout", { refreshToken });
+      const response = await apiHandle.post("/logout");
       return response.data;
     } catch (error) {
       return rejectWithValue(
         error?.response?.data?.message || error?.message || "Logout failed"
-      );
-    }
-  }
-);
-
-// =========>>>>>>> Check Auth <<<<<===========
-export const checkAuthAsync = createAsyncThunk(
-  typeConstants.CHECK_AUTH,
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await apiHandle.get("admin/me");
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(
-        error?.response?.data?.message || error?.message || "Auth check failed"
       );
     }
   }

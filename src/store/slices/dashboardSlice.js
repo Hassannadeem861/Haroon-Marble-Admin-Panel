@@ -24,8 +24,9 @@ const dashboardSlice = createSlice({
         state.get_error = null;
       })
       .addCase(getDashboardAsync.fulfilled, (state, { payload }) => {
+        // Real response shape: { success: true, dashboard: {...} }
         state.get_status = asyncStatus.SUCCEEDED;
-        state.dashboard = payload?.data || null;
+        state.dashboard = payload?.dashboard || null;
       })
       .addCase(getDashboardAsync.rejected, (state, { payload }) => {
         state.get_status = asyncStatus.ERROR;
