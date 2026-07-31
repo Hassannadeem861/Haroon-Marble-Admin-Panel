@@ -42,7 +42,7 @@ import {
 import "./Agents.css";
 
 const { Title } = Typography;
-const { RangePicker } = DatePicker;
+// const { RangePicker } = DatePicker;
 
 // ---- static option lists (mirrors the Mongoose enum values) ----
 const DESIGNATION_OPTIONS = [
@@ -139,7 +139,7 @@ const EmployerCard = ({ record, onView, onEdit, onDelete, deleting }) => (
     </div>
 
     <div className="emp-card-dates">
-      Created {fmtDateShort(record.created_at)} 
+      Created {fmtDateShort(record.created_at)}
       {/* · Updated{" "}
       {fmtDateShort(record.updated_at)} */}
     </div>
@@ -191,7 +191,7 @@ const EmployerManagement = () => {
   const [dateRange, setDateRange] = useState(null);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-
+  const [filterDate, setFilterDate] = useState(null);
   const searchDebounceRef = useRef(null);
 
   // ---------- modals ----------
@@ -204,19 +204,23 @@ const EmployerManagement = () => {
 
   const buildParams = useCallback(
     (overrides = {}) => {
+      const searchValue =
+        search ||
+        designation ||
+        workUnder ||
+        workStatus ||
+        attendence ||
+        undefined;
+
       const params = {
-        search: search || undefined,
-        designation,
-        workUnder,
-        workStatus,
-        attendence,
+        search: searchValue,
         page,
         limit: pageSize,
         ...overrides,
       };
-      if (dateRange && dateRange[0] && dateRange[1]) {
-        params.startDate = dateRange[0].startOf("day").toISOString();
-        params.endDate = dateRange[1].endOf("day").toISOString();
+      if (filterDate) {
+        params.startDate = filterDate.startOf("day").toISOString();
+        params.endDate = filterDate.endOf("day").toISOString();
       }
       Object.keys(params).forEach(
         (k) => params[k] === undefined && delete params[k],
@@ -229,7 +233,7 @@ const EmployerManagement = () => {
       workUnder,
       workStatus,
       attendence,
-      dateRange,
+      filterDate,
       page,
       pageSize,
     ],
@@ -250,7 +254,7 @@ const EmployerManagement = () => {
     workUnder,
     workStatus,
     attendence,
-    dateRange,
+    filterDate,
     page,
     pageSize,
   ]);
@@ -273,7 +277,7 @@ const EmployerManagement = () => {
     setWorkUnder(undefined);
     setWorkStatus(undefined);
     setAttendence(undefined);
-    setDateRange(null);
+    setFilterDate(null);
     setPage(1);
   };
 
@@ -544,15 +548,17 @@ const EmployerManagement = () => {
                 setPage(1);
               }}
             />
-            {/* <RangePicker
+            <DatePicker
               className="emp-date-range"
-              value={dateRange}
+              value={filterDate}
               onChange={(v) => {
-                setDateRange(v);
+                setFilterDate(v);
                 setPage(1);
               }}
-              placeholder={["Created from", "Created to"]}
-            /> */}
+              placeholder="Filter by date"
+              format="DD MMM YYYY"
+              allowClear
+            />
           </div>
           <div className="emp-filters-footer">
             <Button
@@ -569,6 +575,7 @@ const EmployerManagement = () => {
       </div>
 
       <Spin spinning={loading}>
+        
         {/* ---- Mobile card list ---- */}
         <div className="emp-card-list">
           {employers.length === 0 && !loading ? (

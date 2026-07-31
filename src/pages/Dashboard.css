@@ -3,7 +3,7 @@
 .dash-root {
   font-family: 'Plus Jakarta Sans', sans-serif;
   padding: 24px 24px 48px;
-  max-width: 1440px;
+  /* max-width: 1440px; */
   margin: 0 auto;
   -webkit-font-smoothing: antialiased;
 }

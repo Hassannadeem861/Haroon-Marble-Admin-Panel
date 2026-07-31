@@ -73,14 +73,14 @@ const Dashboard = () => {
     [dashboard]
   );
 
-  const workStatusStats = useMemo(
-    () => [
-      { key: "pendingWork", icon: ListTodo, label: "Pending Work", value: formatNumber(dashboard?.pendingWork), color: "#EAB308" },
-      { key: "inProgressWork", icon: Loader, label: "In Progress Work", value: formatNumber(dashboard?.inProgressWork), color: "#386CFF" },
-      { key: "completedWork", icon: CheckCircle2, label: "Completed Work", value: formatNumber(dashboard?.completedWork), color: "#22C55E" },
-    ],
-    [dashboard]
-  );
+  // const workStatusStats = useMemo(
+  //   () => [
+  //     { key: "pendingWork", icon: ListTodo, label: "Pending Work", value: formatNumber(dashboard?.pendingWork), color: "#EAB308" },
+  //     { key: "inProgressWork", icon: Loader, label: "In Progress Work", value: formatNumber(dashboard?.inProgressWork), color: "#386CFF" },
+  //     { key: "completedWork", icon: CheckCircle2, label: "Completed Work", value: formatNumber(dashboard?.completedWork), color: "#22C55E" },
+  //   ],
+  //   [dashboard]
+  // );
 
   const renderSection = (title, stats, colSpan) => (
     <section className="dash-section">
@@ -119,7 +119,7 @@ const Dashboard = () => {
 
       {renderSection("Workforce Overview", workforceStats, COLS_5_PER_ROW)}
       {renderSection("Financial Overview", financeStats, COLS_3_PER_ROW)}
-      {renderSection("Work Status", workStatusStats, COLS_3_PER_ROW)}
+      {/* {renderSection("Work Status", workStatusStats, COLS_3_PER_ROW)}/ */}
     </div>
   );
 };

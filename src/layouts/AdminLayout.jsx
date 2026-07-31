@@ -139,6 +139,7 @@ const AdminLayout = ({ children }) => {
 
   const handleLogout = () => {
     setShowLogoutModal(false);
+    console.log("showLogoutModal: ", showLogoutModal)
     dispatch(logout());
     navigate("/login", { replace: true });
   };

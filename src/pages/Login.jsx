@@ -104,7 +104,7 @@ const Login = () => {
         </Col>
 
         {/* ── RIGHT — Brand (hidden on mobile/tablet) ── */}
-        <Col xs={0} md={12} className="login-right">
+        <Col md={12} className="login-right">
           <div className="login-dots" aria-hidden="true" />
           <div className="login-brand">
             <img src="/logo.png" alt="Haroon Marble" className="login-logo" />
