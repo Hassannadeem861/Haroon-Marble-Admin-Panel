@@ -138,11 +138,7 @@ const EmployerCard = ({ record, onView, onEdit, onDelete, deleting }) => (
       </div>
     </div>
 
-    <div className="emp-card-dates">
-      Created {fmtDateShort(record.created_at)}
-      {/* · Updated{" "}
-      {fmtDateShort(record.updated_at)} */}
-    </div>
+    <div className="emp-card-dates">Entry Date: {record.entryDate || "—"}</div>
 
     <div className="emp-card-actions">
       <Button icon={<EyeOutlined />} onClick={() => onView(record)}>
@@ -290,7 +286,12 @@ const EmployerManagement = () => {
 
   const openEditModal = (record) => {
     setEditingRecord(record);
-    form.setFieldsValue(record);
+    form.setFieldsValue({
+      ...record,
+      entryDate: record.entryDate
+        ? dayjs(record.entryDate, "DD/MM/YYYY")
+        : null,
+    });
     setFormOpen(true);
   };
 
@@ -304,12 +305,20 @@ const EmployerManagement = () => {
     try {
       const values = await form.validateFields();
       setSubmitting(true);
+
+      const payload = {
+        ...values,
+        entryDate: values.entryDate
+          ? values.entryDate.format("DD/MM/YYYY")
+          : undefined, // undefined = backend khud current date le lega
+      };
+
       if (editingRecord) {
         await dispatch(
-          updateEmployerAsync({ id: editingRecord._id, ...values }),
+          updateEmployerAsync({ id: editingRecord._id, ...payload }),
         ).unwrap();
       } else {
-        await dispatch(createEmployerAsync(values)).unwrap();
+        await dispatch(createEmployerAsync(payload)).unwrap();
       }
       closeFormModal();
       fetchList();
@@ -409,6 +418,15 @@ const EmployerManagement = () => {
           </Tag>
         ),
       },
+
+      {
+        title: "Entry Date",
+        dataIndex: "entryDate",
+        key: "entryDate",
+        width: 120,
+        render: (v) => v || "—", // already DD/MM/YYYY string hai backend se
+      },
+
       {
         title: "Created",
         dataIndex: "created_at",
@@ -575,7 +593,6 @@ const EmployerManagement = () => {
       </div>
 
       <Spin spinning={loading}>
-        
         {/* ---- Mobile card list ---- */}
         <div className="emp-card-list">
           {employers.length === 0 && !loading ? (
@@ -677,12 +694,17 @@ const EmployerManagement = () => {
                   {statusLabel(ATTENDANCE_OPTIONS, viewRecord.attendence)}
                 </Tag>
               </Descriptions.Item>
+
+              <Descriptions.Item label="Entry Date">
+                {viewRecord.entryDate || "—"}
+              </Descriptions.Item>
+
               <Descriptions.Item label="Created">
                 {fmtDate(viewRecord.created_at)}
               </Descriptions.Item>
-              <Descriptions.Item label="Updated">
+              {/* <Descriptions.Item label="Updated">
                 {fmtDate(viewRecord.updated_at)}
-              </Descriptions.Item>
+              </Descriptions.Item> */}
             </Descriptions>
           </>
         )}
@@ -741,6 +763,19 @@ const EmployerManagement = () => {
             </Form.Item>
             <Form.Item label="Attendance" name="attendence">
               <Select options={ATTENDANCE_OPTIONS} placeholder="Select" />
+            </Form.Item>
+
+            <Form.Item
+              label="Entry Date"
+              name="entryDate"
+              tooltip="Khali chhodein to aaj ki date automatic save ho jayegi"
+            >
+              <DatePicker
+                style={{ width: "100%" }}
+                format="DD/MM/YYYY"
+                placeholder="DD/MM/YYYY (optional)"
+                allowClear
+              />
             </Form.Item>
           </div>
           <Form.Item label="Description" name="description">
