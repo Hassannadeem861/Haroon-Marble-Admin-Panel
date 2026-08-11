@@ -41,7 +41,7 @@ const NAV_SECTIONS = [
     label: "Management",
     items: [
       { key: 'users',  Icon: UserCheck, label: 'Users',  path: '/users' },
-      { key: 'salaryslips',  Icon: UserCheck, label: 'Salary Slip',  path: '/salary-slip' },
+      // { key: 'salaryslips',  Icon: UserCheck, label: 'Salary Slip',  path: '/salary-slip' },
     ],
   },
   // {
@@ -99,13 +99,13 @@ const AdminLayout = ({ children }) => {
       superAdmin: [
         "dashboard",
         "users",
-        "salaryslips",
+        // "salaryslips",
 
       ],
       admin: [
         "dashboard",
         "users",
-        "salaryslips",
+        // "salaryslips",
       ],
     };
 

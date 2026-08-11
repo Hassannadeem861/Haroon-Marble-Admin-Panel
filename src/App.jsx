@@ -5,6 +5,7 @@ import { Toaster } from 'react-hot-toast';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import AgentsManagement from './pages/AgentsManagement';
+// import SalaryPayments from './pages/SalaryPayments.jsx';
 import AdminProfile from './pages/AdminProfile';
 import AdminLayout from './layouts/AdminLayout';
 import ProtectedRoute from './routes/ProtectedRoute.jsx';
@@ -47,6 +48,17 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       />
+
+      {/* <Route
+        path="/salary-slip"
+        element={
+          <ProtectedRoute>
+            <AdminLayout>
+              <SalaryPayments />
+            </AdminLayout>
+          </ProtectedRoute>
+        }
+      /> */}
 
       {/* ========== REDIRECTS ========== */}
       <Route path="/" element={<Navigate to="/dashboard" replace />} />

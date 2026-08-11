@@ -107,7 +107,7 @@ const Login = () => {
         <Col md={12} className="login-right">
           <div className="login-dots" aria-hidden="true" />
           <div className="login-brand">
-            <img src="/logo.png" alt="Haroon Marble" className="login-logo" />
+            {/* <img src="/haroon-marbles-logo.png" alt="Haroon Marble" className="login-logo" /> */}
             <div className="login-brand-title">
               Haroon Marble
               <span>Admin Panel</span>
