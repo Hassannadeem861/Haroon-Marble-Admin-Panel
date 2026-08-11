@@ -41,6 +41,7 @@ const NAV_SECTIONS = [
     label: "Management",
     items: [
       { key: 'users',  Icon: UserCheck, label: 'Users',  path: '/users' },
+      { key: 'salaryslips',  Icon: UserCheck, label: 'Salary Slip',  path: '/salary-slip' },
     ],
   },
   // {
@@ -98,11 +99,13 @@ const AdminLayout = ({ children }) => {
       superAdmin: [
         "dashboard",
         "users",
+        "salaryslips",
 
       ],
       admin: [
         "dashboard",
         "users",
+        "salaryslips",
       ],
     };
 
@@ -182,20 +185,21 @@ const AdminLayout = ({ children }) => {
         <div className="al-logo" onClick={() => handleNavClick("/dashboard")}>
           <div className="al-logo-icon">
             <img
-              src="/logo.png"
+              src="/haroon-marbles-logo.png"
               alt="Logo"
               style={{
-                width: 26,
-                height: 26,
+                // textAlign:"center",
+                width: 200,
+                height: 200,
                 objectFit: "contain",
                 borderRadius: 7,
               }}
             />
           </div>
-          <div className="al-logo-brand">
+          {/* <div className="al-logo-brand">
             <span className="al-logo-title">Haroon Marble</span>
             <span className="al-logo-sub">Admin Panel</span>
-          </div>
+          </div> */}
         </div>
 
         {/* Nav */}
