@@ -1,17 +1,25 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { ConfigProvider } from 'antd';
-import { Toaster } from 'react-hot-toast';
-import Login from './pages/Login';
-import Dashboard from './pages/Dashboard';
-import AgentsManagement from './pages/AgentsManagement';
+import React from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import { ConfigProvider } from "antd";
+import { Toaster } from "react-hot-toast";
+import Login from "./pages/Login";
+import Dashboard from "./pages/Dashboard";
+import AgentsManagement from "./pages/AgentsManagement";
 // import SalaryPayments from './pages/SalaryPayments.jsx';
-import AdminProfile from './pages/AdminProfile';
-import AdminLayout from './layouts/AdminLayout';
-import ProtectedRoute from './routes/ProtectedRoute.jsx';
-import PublicRoute from './routes/PublicRoutes.jsx';
-import { ScrollToTop } from './components/ScrollToTop';
-import './App.css';
+import FactoryWork from "./pages/factory-work/FactoryWork.jsx";
+import FactoryWorkForm from "./pages/factory-work/FactoryWorkForm.jsx";
+import FactoryWorkDetails from "./pages/factory-work/FactoryWorkDetails.jsx";
+import AdminProfile from "./pages/AdminProfile";
+import AdminLayout from "./layouts/AdminLayout";
+import ProtectedRoute from "./routes/ProtectedRoute.jsx";
+import PublicRoute from "./routes/PublicRoutes.jsx";
+import { ScrollToTop } from "./components/ScrollToTop";
+import "./App.css";
 
 const AppRoutes = () => {
   return (
@@ -75,6 +83,39 @@ const AppRoutes = () => {
         }
       />
 
+      <Route
+        path="/factory-work"
+        element={
+          <ProtectedRoute>
+            <AdminLayout>
+              <FactoryWork />
+            </AdminLayout>
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/factory-work/create"
+        element={
+          <ProtectedRoute>
+            <AdminLayout>
+              <FactoryWorkForm  />
+            </AdminLayout>
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/factory-work/:workId"
+        element={
+          <ProtectedRoute>
+            <AdminLayout>
+              <FactoryWorkDetails />
+            </AdminLayout>
+          </ProtectedRoute>
+        }
+      />
+
     </Routes>
   );
 };
@@ -82,37 +123,40 @@ const AppRoutes = () => {
 const App = () => {
   return (
     <>
-    <Toaster
-      position="top-right"
-      toastOptions={{
-        duration: 4000,
-        style: { fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '13.5px' },
-        error: { iconTheme: { primary: '#EF4444', secondary: '#fff' } },
-        success: { iconTheme: { primary: '#386CFF', secondary: '#fff' } },
-      }}
-    />
-    <ConfigProvider
-      theme={{
-        token: {
-          colorPrimary: '#386CFF',
-          borderRadius: 8,
-        },
-        components: {
-          Button: {
-            borderRadius: 6,
-            controlHeight: 40,
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          duration: 4000,
+          style: {
+            fontFamily: "Plus Jakarta Sans, sans-serif",
+            fontSize: "13.5px",
           },
-          Card: {
+          error: { iconTheme: { primary: "#EF4444", secondary: "#fff" } },
+          success: { iconTheme: { primary: "#386CFF", secondary: "#fff" } },
+        }}
+      />
+      <ConfigProvider
+        theme={{
+          token: {
+            colorPrimary: "#386CFF",
             borderRadius: 8,
           },
-        },
-      }}
-    >
-      <Router>
-        <ScrollToTop />
-        <AppRoutes />
-      </Router>
-    </ConfigProvider>
+          components: {
+            Button: {
+              borderRadius: 6,
+              controlHeight: 40,
+            },
+            Card: {
+              borderRadius: 8,
+            },
+          },
+        }}
+      >
+        <Router>
+          <ScrollToTop />
+          <AppRoutes />
+        </Router>
+      </ConfigProvider>
     </>
   );
 };

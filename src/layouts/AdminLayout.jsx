@@ -41,7 +41,7 @@ const NAV_SECTIONS = [
     label: "Management",
     items: [
       { key: 'users',  Icon: UserCheck, label: 'Users',  path: '/users' },
-      // { key: 'salaryslips',  Icon: UserCheck, label: 'Salary Slip',  path: '/salary-slip' },
+      { key: 'factoryWork',  Icon: UserCheck, label: 'Factory Work',  path: '/factory-work' },
     ],
   },
   // {
@@ -99,12 +99,14 @@ const AdminLayout = ({ children }) => {
       superAdmin: [
         "dashboard",
         "users",
+        "factoryWork",
         // "salaryslips",
 
       ],
       admin: [
         "dashboard",
         "users",
+        "factoryWork",
         // "salaryslips",
       ],
     };
