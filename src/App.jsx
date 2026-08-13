@@ -11,9 +11,8 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import AgentsManagement from "./pages/AgentsManagement";
 // import SalaryPayments from './pages/SalaryPayments.jsx';
-import FactoryWork from "./pages/factory-work/FactoryWork.jsx";
-import FactoryWorkForm from "./pages/factory-work/FactoryWorkForm.jsx";
-import FactoryWorkDetails from "./pages/factory-work/FactoryWorkDetails.jsx";
+import FactoryWorkManagement from "./pages/factory-work/FactoryWorkManagement.jsx";
+import FactoryWorkDetail from "./pages/factory-work/FactoryWorkDetail.jsx";
 import AdminProfile from "./pages/AdminProfile";
 import AdminLayout from "./layouts/AdminLayout";
 import ProtectedRoute from "./routes/ProtectedRoute.jsx";
@@ -88,29 +87,19 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute>
             <AdminLayout>
-              <FactoryWork />
+              <FactoryWorkManagement />
             </AdminLayout>
           </ProtectedRoute>
         }
       />
 
-      <Route
-        path="/factory-work/create"
-        element={
-          <ProtectedRoute>
-            <AdminLayout>
-              <FactoryWorkForm  />
-            </AdminLayout>
-          </ProtectedRoute>
-        }
-      />
 
       <Route
         path="/factory-work/:workId"
         element={
           <ProtectedRoute>
             <AdminLayout>
-              <FactoryWorkDetails />
+              <FactoryWorkDetail />
             </AdminLayout>
           </ProtectedRoute>
         }

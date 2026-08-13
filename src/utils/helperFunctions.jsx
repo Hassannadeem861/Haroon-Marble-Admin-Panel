@@ -103,31 +103,3 @@ export const formatCurrency = (value = 0) => {
   }).format(Number(value) || 0);
 };
 
-// export const formatDate = (date) => {
-//   if (!date) return "—";
-
-//   return new Intl.DateTimeFormat("en-GB", {
-//     day: "2-digit",
-//     month: "short",
-//     year: "numeric",
-//   }).format(new Date(date));
-// };
-
-export const getStatusLabel = (status) => {
-  const labels = {
-    pending: "Pending",
-    in_factory: "In Factory",
-    ready: "Ready",
-    on_the_way: "On The Way",
-    received: "Received",
-    checked: "Checked",
-    completed: "Completed",
-    unpaid: "Unpaid",
-    partially_paid: "Partially Paid",
-    fully_paid: "Fully Paid",
-    paid: "Paid",
-    arrived: "Arrived",
-  };
-
-  return labels[status] || status?.replaceAll("_", " ") || "—";
-};

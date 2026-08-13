@@ -15,6 +15,7 @@ import {
   Menu,
   ChevronRight,
   ClipboardList,
+  Factory
 } from "lucide-react";
 import { logout } from "../store/slices/authSlice";
 import { asyncStatus } from "../utils/asyncStatus";
@@ -41,7 +42,7 @@ const NAV_SECTIONS = [
     label: "Management",
     items: [
       { key: 'users',  Icon: UserCheck, label: 'Users',  path: '/users' },
-      { key: 'factoryWork',  Icon: UserCheck, label: 'Factory Work',  path: '/factory-work' },
+      { key: 'factoryWork',  Icon: Factory, label: 'Factory Work',  path: '/factory-work' },
     ],
   },
   // {
