@@ -19,6 +19,7 @@ import ProtectedRoute from "./routes/ProtectedRoute.jsx";
 import PublicRoute from "./routes/PublicRoutes.jsx";
 import { ScrollToTop } from "./components/ScrollToTop";
 import "./App.css";
+import DailyWorkManagement from "./pages/DailyWorkManagement.jsx";
 
 const AppRoutes = () => {
   return (
@@ -77,6 +78,17 @@ const AppRoutes = () => {
           <ProtectedRoute>
             <AdminLayout>
               <AdminProfile />
+            </AdminLayout>
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/daily-work"
+        element={
+          <ProtectedRoute>
+            <AdminLayout>
+              <DailyWorkManagement />
             </AdminLayout>
           </ProtectedRoute>
         }

@@ -1,0 +1,441 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --navy: #0C1036;
+  --navy-06: rgba(12, 16, 54, 0.06);
+  --navy-10: rgba(12, 16, 54, 0.10);
+  --accent: #386CFF;
+  --accent-08: rgba(56, 108, 255, 0.08);
+  --accent-15: rgba(56, 108, 255, 0.15);
+  --border: #E6E9F2;
+  --muted: #64748B;
+  --bg-soft: #F7F8FC;
+  --danger: #E5484D;
+  --success: #16A34A;
+  --warn: #D97706;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* ============ LAYOUT SHELL — mobile first ============ */
+.wm-root {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  padding: 14px 12px 40px;
+  margin: 0 auto;
+  background: var(--bg-soft);
+  min-height: 100vh;
+}
+
+.wm-header {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.wm-header-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.wm-title {
+  margin: 0 !important;
+  font-weight: 800 !important;
+  color: var(--navy) !important;
+  font-size: 20px !important;
+  line-height: 1.2 !important;
+}
+
+.wm-subtitle {
+  display: block;
+  margin-top: 4px;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.wm-add-btn {
+  width: 100%;
+  height: 42px !important;
+  font-weight: 600 !important;
+  border-radius: 10px !important;
+}
+
+.wm-error-alert {
+  margin-bottom: 14px;
+  border-radius: 10px;
+}
+
+/* ============ AVATAR ============ */
+.wm-avatar {
+  background: var(--accent-15) !important;
+  color: var(--accent) !important;
+  flex-shrink: 0;
+}
+
+.wm-avatar-lg {
+  font-size: 22px;
+}
+
+/* ============ FILTERS ============ */
+.wm-filters-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 12px;
+  margin-bottom: 16px;
+}
+
+.wm-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.wm-filters-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.wm-search .ant-input-affix-wrapper,
+.wm-filter-select .ant-select-selector {
+  width: 100%;
+}
+
+.wm-filters-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.wm-reset-btn {
+  padding: 0 !important;
+  font-weight: 600 !important;
+}
+
+.wm-result-count {
+  font-size: 12.5px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+/* ============ MOBILE CARD LIST ============ */
+.wm-card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.wm-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: 14px;
+  padding: 14px 14px 12px;
+  box-shadow: 0 1px 2px rgba(12, 16, 54, 0.04);
+}
+
+.wm-card--inactive {
+  border-left-color: var(--muted);
+  opacity: 0.85;
+}
+
+.wm-card-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.wm-card-top-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.wm-card-name {
+  font-weight: 700;
+  font-size: 15.5px;
+  color: var(--navy);
+  line-height: 1.3;
+}
+
+.wm-card-workerid {
+  font-size: 11.5px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 2px;
+}
+
+.wm-card-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px 10px;
+  padding: 10px 0;
+  border-top: 1px dashed var(--border);
+  border-bottom: 1px dashed var(--border);
+  margin-bottom: 10px;
+}
+
+.wm-card-field-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--muted);
+  margin-bottom: 2px;
+}
+
+.wm-card-field-value {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--navy);
+  word-break: break-word;
+}
+
+.wm-card-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.wm-card-actions .ant-btn {
+  flex: 1;
+  border-radius: 9px !important;
+  font-weight: 600 !important;
+}
+
+/* ============ DESKTOP TABLE (hidden on mobile) ============ */
+.wm-table-wrap {
+  display: none;
+}
+
+.wm-table-wrap .ant-table {
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.wm-table-wrap .ant-table-thead > tr > th {
+  background: var(--navy) !important;
+  color: #fff !important;
+  font-weight: 600;
+  font-size: 12.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.wm-table-wrap .ant-table-tbody > tr > td {
+  font-size: 13.5px;
+  color: var(--navy);
+}
+
+.wm-table-wrap .ant-table-tbody > tr:hover > td {
+  background: var(--accent-08) !important;
+}
+
+.wm-name-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.wm-name-cell-name {
+  font-weight: 700;
+}
+
+.wm-name-cell-id {
+  font-size: 11.5px;
+  color: var(--muted);
+}
+
+.wm-actions-cell {
+  display: flex;
+  gap: 6px;
+}
+
+.wm-pagination-mobile {
+  display: flex;
+  justify-content: center;
+  margin-top: 18px;
+}
+
+/* ============ DETAIL DRAWER ============ */
+.wm-drawer-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-bottom: 16px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.wm-drawer-header h3 {
+  margin: 0 !important;
+  color: var(--navy) !important;
+}
+
+.wm-drawer-workerid {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.wm-drawer-status {
+  margin-left: auto;
+}
+
+.wm-drawer-descriptions {
+  margin-bottom: 20px;
+}
+
+.wm-section-title {
+  font-weight: 700;
+  color: var(--navy);
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.wm-recent-title {
+  margin-top: 22px;
+}
+
+.wm-summary-block {
+  margin-bottom: 6px;
+}
+
+.wm-stat-card {
+  background: var(--accent-08);
+  border: 1px solid var(--accent-15);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.wm-stat-card .ant-statistic-title {
+  font-size: 11.5px;
+  color: var(--muted);
+}
+
+.wm-stat-card .ant-statistic-content {
+  font-size: 16px;
+  color: var(--navy);
+  font-weight: 700;
+}
+
+.wm-recent-pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 14px;
+}
+
+/* ============ FORM MODAL ============ */
+.wm-form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0 16px;
+}
+
+.wm-form-actions {
+  margin-top: 4px;
+  margin-bottom: 0;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.wm-form-actions .ant-btn {
+  width: 100%;
+}
+
+/* ============ TABLET (>= 640px) ============ */
+@media (min-width: 640px) {
+  .wm-root {
+    padding: 20px 20px 40px;
+  }
+  .wm-header-top {
+    align-items: center;
+  }
+  .wm-add-btn {
+    width: auto;
+  }
+  .wm-filters-row {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+  .wm-card-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* ============ LAPTOP / SMALL DESKTOP (>= 900px): switch to table ============ */
+@media (min-width: 900px) {
+  .wm-card-list {
+    display: none;
+  }
+  .wm-table-wrap {
+    display: block;
+  }
+  .wm-header {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .wm-title {
+    font-size: 24px !important;
+  }
+  .wm-filters {
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .wm-filters-row {
+    flex: 1 1 auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .wm-search {
+    flex: 2 1 240px;
+  }
+  .wm-filter-select {
+    flex: 1 1 140px;
+    min-width: 130px;
+  }
+  .wm-filters-footer {
+    flex: 0 0 auto;
+  }
+  .wm-form-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .wm-form-actions .ant-btn {
+    width: auto;
+  }
+}
+
+/* Antd calendar dropdown renders outside .wm-root (in a portal),
+   so it needs its own mobile fix */
+@media (max-width: 480px) {
+  .ant-picker-dropdown {
+    left: 8px !important;
+    right: 8px !important;
+    width: calc(100vw - 16px) !important;
+  }
+  .ant-picker-dropdown .ant-picker-panel-container,
+  .ant-picker-dropdown .ant-picker-panel,
+  .ant-picker-dropdown .ant-picker-date-panel,
+  .ant-picker-dropdown .ant-picker-content {
+    width: 100% !important;
+  }
+  .ant-picker-dropdown .ant-picker-content th,
+  .ant-picker-dropdown .ant-picker-content td {
+    width: auto !important;
+  }
+}
+
+/* ============ DESKTOP (>= 1200px) ============ */
+@media (min-width: 1200px) {
+  .wm-root {
+    padding: 28px 32px 48px;
+  }
+}

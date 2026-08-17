@@ -2,7 +2,8 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { apiHandle } from "../../utils/apiHandle";
 import { typeConstants } from "../../utils/constant";
 
-
+// ─── LIST (master workers) ──────────────────────────────────────
+// Backend: GET /employers -> { success, data: [employer...], pagination }
 export const getEmployersAsync = createAsyncThunk(
   typeConstants.GET_EMPLOYERS,
   async (params = {}, { rejectWithValue }) => {
@@ -10,25 +11,33 @@ export const getEmployersAsync = createAsyncThunk(
       const response = await apiHandle.get("/get-all-employers", { params });
       return response.data;
     } catch (error) {
-      return rejectWithValue(error?.response?.data?.message || error?.message || "Failed to fetch employers");
+      return rejectWithValue(
+        error?.response?.data?.message || error?.message || "Failed to fetch workers",
+      );
     }
-  }
+  },
 );
 
-// ─── SINGLE ────────────────────────────────────────────────────
+// ─── SINGLE (profile + daily history + salary summary) ─────────
+// Backend: GET /employers/:employerId -> { success, data: { employer, summary, recentWork, pagination } }
 export const getSingleEmployerAsync = createAsyncThunk(
   typeConstants.GET_SINGLE_EMPLOYER,
-  async (id, { rejectWithValue }) => {
+  async ({ id, page = 1, limit = 10 } = {}, { rejectWithValue }) => {
     try {
-      const response = await apiHandle.get(`/get-single-employer/${id}`);
+      const response = await apiHandle.get(`/get-single-employer/${id}`, {
+        params: { page, limit },
+      });
       return response.data;
     } catch (error) {
-      return rejectWithValue(error?.response?.data?.message || error?.message || "Failed to fetch employer");
+      return rejectWithValue(
+        error?.response?.data?.message || error?.message || "Failed to fetch worker",
+      );
     }
-  }
+  },
 );
 
-// ─── CREATE ────────────────────────────────────────────────────
+// ─── CREATE ──────────────────────────────────────────────────────
+// Backend: POST /employers -> { success, message, data: employer }
 export const createEmployerAsync = createAsyncThunk(
   typeConstants.CREATE_EMPLOYER,
   async (payload, { rejectWithValue }) => {
@@ -36,12 +45,15 @@ export const createEmployerAsync = createAsyncThunk(
       const response = await apiHandle.post("/create-employer", payload);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error?.response?.data?.message || error?.message || "Failed to create employer");
+      return rejectWithValue(
+        error?.response?.data?.message || error?.message || "Failed to create worker",
+      );
     }
-  }
+  },
 );
 
-// ─── UPDATE ────────────────────────────────────────────────────
+// ─── UPDATE (master profile only — no attendance/site fields here) ─
+// Backend: PUT /employers/:employerId -> { success, message, data: employer }
 export const updateEmployerAsync = createAsyncThunk(
   typeConstants.UPDATE_EMPLOYER,
   async ({ id, ...payload }, { rejectWithValue }) => {
@@ -49,12 +61,14 @@ export const updateEmployerAsync = createAsyncThunk(
       const response = await apiHandle.put(`/update-employer/${id}`, payload);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error?.response?.data?.message || error?.message || "Failed to update employer");
+      return rejectWithValue(
+        error?.response?.data?.message || error?.message || "Failed to update worker",
+      );
     }
-  }
+  },
 );
 
-// ─── DELETE ────────────────────────────────────────────────────
+// ─── DELETE (soft delete) ───────────────────────────────────────
 export const deleteEmployerAsync = createAsyncThunk(
   typeConstants.DELETE_EMPLOYER,
   async (id, { rejectWithValue }) => {
@@ -62,7 +76,9 @@ export const deleteEmployerAsync = createAsyncThunk(
       const response = await apiHandle.delete(`/delete-employer/${id}`);
       return { ...response.data, id };
     } catch (error) {
-      return rejectWithValue(error?.response?.data?.message || error?.message || "Failed to delete employer");
+      return rejectWithValue(
+        error?.response?.data?.message || error?.message || "Failed to delete worker",
+      );
     }
-  }
+  },
 );

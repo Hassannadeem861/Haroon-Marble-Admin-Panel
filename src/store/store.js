@@ -2,6 +2,7 @@ import { configureStore, combineReducers } from "@reduxjs/toolkit"
 import authReducer from "./slices/authSlice.js";
 import dashboardReducer from "./slices/dashboardSlice.js";
 import employerReducer from "./slices/employerSlice.js";
+import dailyWorkReducer from "./slices/dailyWorkSlice.js";
 import factoryWorkReducer from "./slices/factoryWorkSlice.js";
 // import salarySlipReducer from "./slices/salarySlipSlice.js";
 import {
@@ -31,6 +32,7 @@ const rootReducer = combineReducers({
   auth: authReducer,
   dashboard: dashboardReducer,
   employer: employerReducer,
+  dailyWork: dailyWorkReducer,
   factoryWork: factoryWorkReducer,
   // salarySlip: salarySlipReducer,
 

@@ -1,0 +1,81 @@
+.dw-root {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  padding: 14px 12px 40px;
+  background: #F7F8FC;
+  min-height: 100vh;
+}
+
+.dw-header {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.dw-title {
+  margin: 0 !important;
+  font-weight: 800 !important;
+  color: #0C1036 !important;
+  font-size: 20px !important;
+}
+
+.dw-subtitle {
+  font-size: 12.5px;
+  color: #64748B;
+}
+
+.dw-error-alert {
+  margin-bottom: 14px;
+  border-radius: 10px;
+}
+
+.dw-filters-card {
+  background: #fff;
+  border: 1px solid #E6E9F2;
+  border-radius: 14px;
+  padding: 12px;
+  margin-bottom: 16px;
+}
+
+.dw-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.dw-filter {
+  flex: 1 1 160px;
+  min-width: 140px;
+}
+
+.dw-result-count {
+  font-size: 12.5px;
+  color: #64748B;
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+.dw-actions-cell {
+  display: flex;
+  gap: 6px;
+}
+
+.dw-form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0 16px;
+}
+
+.dw-form-actions {
+  margin-top: 4px;
+  margin-bottom: 0;
+  padding-top: 12px;
+  border-top: 1px solid #E6E9F2;
+}
+
+@media (min-width: 640px) {
+  .dw-root { padding: 20px 20px 40px; }
+  .dw-header { flex-direction: row; align-items: center; justify-content: space-between; }
+  .dw-form-grid { grid-template-columns: 1fr 1fr; }
+}
