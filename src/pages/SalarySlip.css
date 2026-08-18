@@ -1,0 +1,295 @@
+:root {
+  --navy: #0C1036;
+  --accent: #386CFF;
+  --accent-08: rgba(56, 108, 255, 0.08);
+  --border: #E6E9F2;
+  --muted: #64748B;
+  --bg-soft: #F7F8FC;
+  --gold: #B8860B;
+}
+
+.ssp-root {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  padding: 14px 12px 40px;
+  background: var(--bg-soft);
+  min-height: 100vh;
+}
+
+.ssp-title {
+  margin: 0 0 12px !important;
+  font-weight: 800 !important;
+  color: var(--navy) !important;
+  font-size: 20px !important;
+}
+
+.ssp-controls {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+  margin-bottom: 16px;
+}
+
+.ssp-controls-row {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ssp-control {
+  width: 100%;
+}
+
+.ssp-error {
+  margin-bottom: 14px;
+  border-radius: 10px;
+}
+
+.ssp-actions {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.ssp-actions .ant-btn {
+  flex: 1;
+}
+
+.ssp-empty-state {
+  background: #fff;
+  border: 1px dashed var(--border);
+  border-radius: 14px;
+  padding: 40px 16px;
+}
+
+/* ============ THE PRINTABLE SHEET ============ */
+.ssp-sheet {
+  background: #fff;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  padding: 20px 16px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.ssp-sheet-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.ssp-logo {
+  height: 48px;
+  width: auto;
+  object-fit: contain;
+}
+
+.ssp-company-name {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--navy);
+  letter-spacing: 0.02em;
+}
+
+.ssp-slip-label {
+  font-size: 12px;
+  color: var(--gold);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 2px;
+}
+
+.ssp-divider {
+  height: 1px;
+  background: linear-gradient(to right, var(--accent), var(--gold));
+  margin: 16px 0 18px;
+  opacity: 0.4;
+}
+
+.ssp-meta-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 16px;
+  margin-bottom: 18px;
+}
+
+.ssp-meta-label {
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  margin-bottom: 2px;
+}
+
+.ssp-meta-value {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.ssp-summary-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 22px;
+}
+
+.ssp-summary-card {
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.ssp-summary-card--highlight {
+  background: var(--accent-08);
+  border-color: var(--accent);
+  grid-column: 1 / -1;
+}
+
+.ssp-summary-label {
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+.ssp-summary-value {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.ssp-net-value {
+  font-size: 22px;
+  color: var(--accent);
+}
+
+.ssp-section-title {
+  font-weight: 700;
+  color: var(--navy);
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+/* ============ ITEMIZED TABLE ============ */
+.ssp-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+  margin-bottom: 22px;
+}
+
+.ssp-table thead th {
+  background: var(--navy);
+  color: #fff;
+  text-align: left;
+  padding: 8px 10px;
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.ssp-table tbody td {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border);
+  color: var(--navy);
+}
+
+.ssp-table tbody tr:nth-child(even) {
+  background: var(--bg-soft);
+}
+
+.ssp-net-cell {
+  font-weight: 700;
+}
+
+.ssp-tag {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.ssp-tag--present {
+  background: rgba(22, 163, 74, 0.12);
+  color: #16A34A;
+}
+
+.ssp-tag--absent {
+  background: rgba(229, 72, 77, 0.12);
+  color: #E5484D;
+}
+
+/* ============ SIGNATURES ============ */
+.ssp-signatures {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  margin-top: 40px;
+}
+
+.ssp-signature-block {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  min-height: 80px;
+}
+
+.ssp-signature-image {
+  display: block;
+  width: 120px;
+  height: 42px;
+  object-fit: contain;
+  margin: 0 auto 2px;
+  filter: contrast(1.05);
+}
+
+.ssp-signature-line {
+  width: 100%;
+  max-width: 260px;
+  border-top: 1px solid var(--navy);
+  margin: 0 auto 6px;
+}
+
+.ssp-signature-label {
+  font-size: 11.5px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.ssp-footer-note {
+  text-align: center;
+  font-size: 10.5px;
+  color: var(--muted);
+  margin-top: 24px;
+}
+
+/* ============ TABLET / DESKTOP ============ */
+@media (min-width: 640px) {
+  .ssp-root { padding: 20px 20px 40px; }
+  .ssp-controls-row { flex-direction: row; flex-wrap: wrap; align-items: center; }
+  .ssp-control { width: auto; flex: 1 1 200px; }
+  .ssp-sheet { padding: 32px 40px; }
+  .ssp-meta-grid { grid-template-columns: repeat(4, 1fr); }
+  .ssp-summary-grid { grid-template-columns: repeat(3, 1fr); }
+  .ssp-summary-card--highlight { grid-column: auto; }
+}
+
+@media (min-width: 1200px) {
+  .ssp-root { padding: 28px 32px 48px; }
+}
+
+/* ============ PRINT ============ */
+@media print {
+  .ssp-no-print { display: none !important; }
+  .ssp-root { background: #fff; padding: 0; }
+  .ssp-sheet { border: none; max-width: 100%; padding: 0; }
+  .ssp-table thead th { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}

@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState, useMemo } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  useMemo,
+} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Table,
@@ -63,27 +69,36 @@ const WORK_STATUS_LABEL = {
   completed: { label: "Completed", color: "success" },
 };
 
+const UNDER_WORK_LABEL = {
+  owner: { label: "Owner", color: "default" },
+  partnerShip: { label: "Partner Ship", color: "processing" },
+  client: { label: "Client", color: "success" },
+};
+
 const ATTENDANCE_LABEL = {
   present: { label: "Present", color: "success" },
   absent: { label: "Absent", color: "error" },
 };
 
 const fmtDate = (d) => (d ? dayjs(d).format("DD MMM YYYY, hh:mm A") : "—");
-const money = (v) => (v !== undefined && v !== null && v !== "" ? `Rs. ${Number(v).toLocaleString()}` : "—");
+const money = (v) =>
+  v !== undefined && v !== null && v !== ""
+    ? `Rs. ${Number(v).toLocaleString()}`
+    : "—";
 
-const statusLabel = (opts, val) => opts.find((o) => o.value === val)?.label || val || "—";
+const statusLabel = (opts, val) =>
+  opts.find((o) => o.value === val)?.label || val || "—";
 
 // Turn a "totalOvertime" style key into "Total Overtime" for generic summary rendering,
 // since the exact salary-slip summary shape isn't fixed on the frontend side.
 const humanizeKey = (key) =>
-  key
-    .replace(/([a-z])([A-Z])/g, "$1 $2")
-    .replace(/^./, (c) => c.toUpperCase());
+  key.replace(/([a-z])([A-Z])/g, "$1 $2").replace(/^./, (c) => c.toUpperCase());
 
 // Keys ending in "Days" or "Hours" are counts, never currency — even
 // though some (e.g. totalOvertimeHours) contain the word "total".
 const isCountKey = (key) => /Days$|Hours$/i.test(key);
-const isMoneyKey = (key) => !isCountKey(key) && /salary|amount|advance|pay|net|gross|total/i.test(key);
+const isMoneyKey = (key) =>
+  !isCountKey(key) && /salary|amount|advance|pay|net|gross|total/i.test(key);
 
 // =====================================================================
 // Mobile card — one worker (master profile)
@@ -106,7 +121,9 @@ const WorkerCard = ({ record, onView, onEdit, onDelete, deleting }) => (
     <div className="wm-card-grid">
       <div>
         <div className="wm-card-field-label">Designation</div>
-        <div className="wm-card-field-value">{statusLabel(DESIGNATION_OPTIONS, record.designation)}</div>
+        <div className="wm-card-field-value">
+          {statusLabel(DESIGNATION_OPTIONS, record.designation)}
+        </div>
       </div>
       <div>
         <div className="wm-card-field-label">Base Salary</div>
@@ -168,37 +185,66 @@ const WorkerDetailDrawer = ({ open, workerId, onClose }) => {
 
   const workColumns = [
     { title: "Date", dataIndex: "entryDate", key: "entryDate", width: 110 },
-    { title: "Site", dataIndex: "currentSite", key: "currentSite", render: (v) => v || "—" },
+    {
+      title: "Site",
+      dataIndex: "currentSite",
+      key: "currentSite",
+      render: (v) => v || "—",
+    },
     {
       title: "Attendance",
       dataIndex: "attendance",
       key: "attendance",
       render: (v) => (
-        <Tag color={ATTENDANCE_LABEL[v]?.color || "default"}>{ATTENDANCE_LABEL[v]?.label || v}</Tag>
+        <Tag color={ATTENDANCE_LABEL[v]?.color || "default"}>
+          {ATTENDANCE_LABEL[v]?.label || v}
+        </Tag>
       ),
     },
     {
-      title: "Status",
+      title: "Work Under",
+      dataIndex: "workUnder",
+      key: "workUnder",
+      render: (v) => (
+        <Tag color={UNDER_WORK_LABEL[v]?.color || "default"}>
+          {UNDER_WORK_LABEL[v]?.label || v}
+        </Tag>
+      ),
+    },
+    {
+      title: "Work Status",
       dataIndex: "workStatus",
       key: "workStatus",
       render: (v) => (
-        <Tag color={WORK_STATUS_LABEL[v]?.color || "default"}>{WORK_STATUS_LABEL[v]?.label || v}</Tag>
+        <Tag color={WORK_STATUS_LABEL[v]?.color || "default"}>
+          {WORK_STATUS_LABEL[v]?.label || v}
+        </Tag>
       ),
     },
     { title: "Salary", dataIndex: "salary", key: "salary", render: money },
     {
       title: "Overtime",
       key: "overtime",
-      render: (_, r) => `${r.overtimeHours || 0} hrs (${money(r.overtimeAmount)})`,
+      render: (_, r) =>
+        `${r.overtimeHours || 0} hrs (${money(r.overtimeAmount)})`,
     },
-    { title: "Advance", dataIndex: "advanceAmount", key: "advanceAmount", render: money },
+    {
+      title: "Advance",
+      dataIndex: "advanceAmount",
+      key: "advanceAmount",
+      render: money,
+    },
   ];
 
   return (
     <Drawer
       open={open}
       onClose={onClose}
-      title={selectedWorker ? `${selectedWorker.name} — Worker Detail` : "Worker Detail"}
+      title={
+        selectedWorker
+          ? `${selectedWorker.name} — Worker Detail`
+          : "Worker Detail"
+      }
       width={720}
       className="wm-drawer"
       destroyOnClose
@@ -207,55 +253,86 @@ const WorkerDetailDrawer = ({ open, workerId, onClose }) => {
         {selectedWorker && (
           <>
             <div className="wm-drawer-header">
-              <Avatar size={56} icon={<UserOutlined />} className="wm-avatar wm-avatar-lg" />
+              <Avatar
+                size={56}
+                icon={<UserOutlined />}
+                className="wm-avatar wm-avatar-lg"
+              />
               <div>
                 <h3>{selectedWorker.name}</h3>
-                <span className="wm-drawer-workerid">{selectedWorker.workerId}</span>
+                <span className="wm-drawer-workerid">
+                  {selectedWorker.workerId}
+                </span>
               </div>
-              <Tag color={selectedWorker.status === "active" ? "success" : "default"} className="wm-drawer-status">
+              <Tag
+                color={
+                  selectedWorker.status === "active" ? "success" : "default"
+                }
+                className="wm-drawer-status"
+              >
                 {statusLabel(STATUS_OPTIONS, selectedWorker.status)}
               </Tag>
             </div>
 
-            <Descriptions column={2} size="small" bordered className="wm-drawer-descriptions">
+            <Descriptions
+              column={2}
+              size="small"
+              bordered
+              className="wm-drawer-descriptions"
+            >
               <Descriptions.Item label="Designation">
                 {statusLabel(DESIGNATION_OPTIONS, selectedWorker.designation)}
               </Descriptions.Item>
-              <Descriptions.Item label="Base Salary">{money(selectedWorker.salary)}</Descriptions.Item>
-              <Descriptions.Item label="Entry Date">{selectedWorker.entryDate || "—"}</Descriptions.Item>
-              <Descriptions.Item label="Created">{fmtDate(selectedWorker.created_at)}</Descriptions.Item>
+              <Descriptions.Item label="Base Salary">
+                {money(selectedWorker.salary)}
+              </Descriptions.Item>
+              <Descriptions.Item label="Entry Date">
+                {selectedWorker.entryDate || "—"}
+              </Descriptions.Item>
+              <Descriptions.Item label="Created">
+                {fmtDate(selectedWorker.created_at)}
+              </Descriptions.Item>
               <Descriptions.Item label="Description" span={2}>
                 {selectedWorker.description || "—"}
               </Descriptions.Item>
             </Descriptions>
 
-            {summary && typeof summary === "object" && Object.keys(summary).length > 0 && (
-              <div className="wm-summary-block">
-                <div className="wm-section-title">Salary Summary</div>
-                <Row gutter={[12, 12]}>
-                  {Object.entries(summary).map(([key, value]) => {
-                    if (value !== null && typeof value === "object") return null;
-                    return (
-                      <Col xs={12} sm={8} key={key}>
-                        <div className="wm-stat-card">
-                          <Statistic
-                            title={humanizeKey(key)}
-                            value={
-                              isMoneyKey(key) && typeof value === "number"
-                                ? value
-                                : value ?? "—"
-                            }
-                            prefix={isMoneyKey(key) && typeof value === "number" ? "Rs." : undefined}
-                          />
-                        </div>
-                      </Col>
-                    );
-                  })}
-                </Row>
-              </div>
-            )}
+            {summary &&
+              typeof summary === "object" &&
+              Object.keys(summary).length > 0 && (
+                <div className="wm-summary-block">
+                  <div className="wm-section-title">Salary Summary</div>
+                  <Row gutter={[12, 12]}>
+                    {Object.entries(summary).map(([key, value]) => {
+                      if (value !== null && typeof value === "object")
+                        return null;
+                      return (
+                        <Col xs={12} sm={8} key={key}>
+                          <div className="wm-stat-card">
+                            <Statistic
+                              title={humanizeKey(key)}
+                              value={
+                                isMoneyKey(key) && typeof value === "number"
+                                  ? value
+                                  : (value ?? "—")
+                              }
+                              prefix={
+                                isMoneyKey(key) && typeof value === "number"
+                                  ? "Rs."
+                                  : undefined
+                              }
+                            />
+                          </div>
+                        </Col>
+                      );
+                    })}
+                  </Row>
+                </div>
+              )}
 
-            <div className="wm-section-title wm-recent-title">Daily Work History</div>
+            <div className="wm-section-title wm-recent-title">
+              Daily Work History
+            </div>
             <Table
               rowKey="_id"
               size="small"
@@ -263,11 +340,19 @@ const WorkerDetailDrawer = ({ open, workerId, onClose }) => {
               dataSource={recentWork}
               pagination={false}
               scroll={{ x: 700 }}
-              locale={{ emptyText: <Empty description="No daily work entries yet" /> }}
+              locale={{
+                emptyText: <Empty description="No daily work entries yet" />,
+              }}
             />
             {total > limit && (
               <div className="wm-recent-pagination">
-                <Pagination simple current={page} pageSize={limit} total={total} onChange={handlePageChange} />
+                <Pagination
+                  simple
+                  current={page}
+                  pageSize={limit}
+                  total={total}
+                  onChange={handlePageChange}
+                />
               </div>
             )}
           </>
@@ -284,7 +369,12 @@ const WorkerManagement = () => {
   const dispatch = useDispatch();
 
   const employerState = useSelector((state) => state.employer || {});
-  const { workers = [], pagination = {}, get_status, get_error: error } = employerState;
+  const {
+    workers = [],
+    pagination = {},
+    get_status,
+    get_error: error,
+  } = employerState;
   const { total = 0 } = pagination;
 
   const loading = get_status === "loading";
@@ -307,11 +397,18 @@ const WorkerManagement = () => {
 
   const buildParams = useCallback(
     (overrides = {}) => {
-      const params = { search: search || undefined, status, page, limit: pageSize, ...overrides };
-      Object.keys(params).forEach((k) => params[k] === undefined && delete params[k]);
+      const params = {
+        search: search || undefined,
+        page,
+        limit: pageSize,
+        ...overrides,
+      };
+      Object.keys(params).forEach(
+        (k) => params[k] === undefined && delete params[k],
+      );
       return params;
     },
-    [search, status, page, pageSize],
+    [search, page, pageSize],
   );
 
   const fetchList = useCallback(
@@ -322,12 +419,15 @@ const WorkerManagement = () => {
   useEffect(() => {
     fetchList();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [status, page, pageSize]);
+  }, [page, pageSize]);
 
   // designation is client-side only — backend search doesn't take a
   // separate designation filter, so we filter the fetched page locally.
   const visibleWorkers = useMemo(
-    () => (designation ? workers.filter((w) => w.designation === designation) : workers),
+    () =>
+      designation
+        ? workers.filter((w) => w.designation === designation)
+        : workers,
     [workers, designation],
   );
 
@@ -337,7 +437,9 @@ const WorkerManagement = () => {
     if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
     searchDebounceRef.current = setTimeout(() => {
       setPage(1);
-      dispatch(getEmployersAsync(buildParams({ search: value || undefined, page: 1 })));
+      dispatch(
+        getEmployersAsync(buildParams({ search: value || undefined, page: 1 })),
+      );
     }, 400);
   };
 
@@ -359,7 +461,9 @@ const WorkerManagement = () => {
     setEditingRecord(record);
     form.setFieldsValue({
       ...record,
-      entryDate: record.entryDate ? dayjs(record.entryDate, "DD/MM/YYYY") : null,
+      entryDate: record.entryDate
+        ? dayjs(record.entryDate, "DD/MM/YYYY")
+        : null,
     });
     setFormOpen(true);
   };
@@ -377,11 +481,15 @@ const WorkerManagement = () => {
 
       const payload = {
         ...values,
-        entryDate: values.entryDate ? values.entryDate.format("DD/MM/YYYY") : undefined,
+        entryDate: values.entryDate
+          ? values.entryDate.format("DD/MM/YYYY")
+          : undefined,
       };
 
       if (editingRecord) {
-        await dispatch(updateEmployerAsync({ id: editingRecord._id, ...payload })).unwrap();
+        await dispatch(
+          updateEmployerAsync({ id: editingRecord._id, ...payload }),
+        ).unwrap();
       } else {
         await dispatch(createEmployerAsync(payload)).unwrap();
       }
@@ -442,7 +550,11 @@ const WorkerManagement = () => {
         dataIndex: "status",
         key: "status",
         width: 100,
-        render: (v) => <Tag color={v === "active" ? "success" : "default"}>{statusLabel(STATUS_OPTIONS, v)}</Tag>,
+        render: (v) => (
+          <Tag color={v === "active" ? "success" : "default"}>
+            {statusLabel(STATUS_OPTIONS, v)}
+          </Tag>
+        ),
       },
       {
         title: "Entry Date",
@@ -466,13 +578,24 @@ const WorkerManagement = () => {
         width: 140,
         render: (_, record) => (
           <div className="wm-actions-cell">
-            <Button size="small" icon={<EyeOutlined />} onClick={() => setViewWorkerId(record._id)} />
-            <Button size="small" icon={<EditOutlined />} onClick={() => openEditModal(record)} />
+            <Button
+              size="small"
+              icon={<EyeOutlined />}
+              onClick={() => setViewWorkerId(record._id)}
+            />
+            <Button
+              size="small"
+              icon={<EditOutlined />}
+              onClick={() => openEditModal(record)}
+            />
             <Popconfirm
               title="Delete this worker?"
               description={`Remove ${record.name} permanently?`}
               okText="Delete"
-              okButtonProps={{ danger: true, loading: deletingId === record._id }}
+              okButtonProps={{
+                danger: true,
+                loading: deletingId === record._id,
+              }}
               onConfirm={() => handleDelete(record)}
             >
               <Button size="small" danger icon={<DeleteOutlined />} />
@@ -492,16 +615,29 @@ const WorkerManagement = () => {
             <Title level={3} className="wm-title">
               Worker Management
             </Title>
-            <span className="wm-subtitle">Master profiles — daily attendance & pay live on each worker's detail view</span>
+            <span className="wm-subtitle">
+              Master profiles — daily attendance & pay live on each worker's
+              detail view
+            </span>
           </div>
         </div>
-        <Button type="primary" icon={<PlusOutlined />} className="wm-add-btn" onClick={openAddModal}>
+        <Button
+          type="primary"
+          icon={<PlusOutlined />}
+          className="wm-add-btn"
+          onClick={openAddModal}
+        >
           Add Worker
         </Button>
       </div>
 
       {error && (
-        <Alert type="error" showIcon message={typeof error === "string" ? error : "Something went wrong"} className="wm-error-alert" />
+        <Alert
+          type="error"
+          showIcon
+          message={typeof error === "string" ? error : "Something went wrong"}
+          className="wm-error-alert"
+        />
       )}
 
       <div className="wm-filters-card">
@@ -536,7 +672,12 @@ const WorkerManagement = () => {
             />
           </div>
           <div className="wm-filters-footer">
-            <Button type="link" className="wm-reset-btn" icon={<ReloadOutlined />} onClick={resetFilters}>
+            <Button
+              type="link"
+              className="wm-reset-btn"
+              icon={<ReloadOutlined />}
+              onClick={resetFilters}
+            >
               Reset filters
             </Button>
             <span className="wm-result-count">{total} worker(s)</span>
@@ -563,7 +704,13 @@ const WorkerManagement = () => {
           )}
           {visibleWorkers.length > 0 && (
             <div className="wm-pagination-mobile">
-              <Pagination simple current={page} pageSize={pageSize} total={total} onChange={setPage} />
+              <Pagination
+                simple
+                current={page}
+                pageSize={pageSize}
+                total={total}
+                onChange={setPage}
+              />
             </div>
           )}
         </div>
@@ -591,7 +738,11 @@ const WorkerManagement = () => {
       </Spin>
 
       {/* =================== DETAIL DRAWER =================== */}
-      <WorkerDetailDrawer open={!!viewWorkerId} workerId={viewWorkerId} onClose={() => setViewWorkerId(null)} />
+      <WorkerDetailDrawer
+        open={!!viewWorkerId}
+        workerId={viewWorkerId}
+        onClose={() => setViewWorkerId(null)}
+      />
 
       {/* =================== ADD / EDIT MODAL =================== */}
       <Modal
@@ -604,13 +755,25 @@ const WorkerManagement = () => {
       >
         <Form form={form} layout="vertical" onFinish={handleSubmit}>
           <div className="wm-form-grid">
-            <Form.Item label="Name" name="name" rules={[{ required: true, message: "Name is required" }]}>
+            <Form.Item
+              label="Name"
+              name="name"
+              rules={[{ required: true, message: "Name is required" }]}
+            >
               <Input placeholder="e.g. Ali" />
             </Form.Item>
-            <Form.Item label="Designation" name="designation" rules={[{ required: true, message: "Select a designation" }]}>
+            <Form.Item
+              label="Designation"
+              name="designation"
+              rules={[{ required: true, message: "Select a designation" }]}
+            >
               <Select options={DESIGNATION_OPTIONS} placeholder="Select" />
             </Form.Item>
-            <Form.Item label="Base Salary" name="salary" rules={[{ required: true, message: "Salary is required" }]}>
+            <Form.Item
+              label="Base Salary"
+              name="salary"
+              rules={[{ required: true, message: "Salary is required" }]}
+            >
               <InputNumber min={0} style={{ width: "100%" }} placeholder="0" />
             </Form.Item>
             {editingRecord && (
@@ -618,8 +781,17 @@ const WorkerManagement = () => {
                 <Select options={STATUS_OPTIONS} placeholder="Select" />
               </Form.Item>
             )}
-            <Form.Item label="Entry Date" name="entryDate" tooltip="Khali chhodein to aaj ki date automatic save ho jayegi">
-              <DatePicker style={{ width: "100%" }} format="DD/MM/YYYY" placeholder="DD/MM/YYYY (optional)" allowClear />
+            <Form.Item
+              label="Entry Date"
+              name="entryDate"
+              tooltip="Khali chhodein to aaj ki date automatic save ho jayegi"
+            >
+              <DatePicker
+                style={{ width: "100%" }}
+                format="DD/MM/YYYY"
+                placeholder="DD/MM/YYYY (optional)"
+                allowClear
+              />
             </Form.Item>
           </div>
           <Form.Item label="Description" name="description">

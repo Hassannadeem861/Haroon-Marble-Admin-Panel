@@ -16,8 +16,16 @@ import {
   Pagination,
   Empty,
   Spin,
+  Avatar,
 } from "antd";
-import { PlusOutlined, EditOutlined, DeleteOutlined, ReloadOutlined } from "@ant-design/icons";
+import {
+  PlusOutlined,
+  EditOutlined,
+  DeleteOutlined,
+  ReloadOutlined,
+  UserOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
 import dayjs from "dayjs";
 import {
   getWorkersListAsync,
@@ -52,6 +60,70 @@ const STATUS_COLOR = { pending: "warning", inprogress: "processing", completed: 
 const money = (v) => (v !== undefined && v !== null && v !== "" ? `Rs. ${Number(v).toLocaleString()}` : "—");
 const labelOf = (opts, v) => opts.find((o) => o.value === v)?.label || v || "—";
 
+// =====================================================================
+// Mobile card — one daily work entry
+// =====================================================================
+const DailyWorkCard = ({ record, onEdit, onDelete, deleting }) => (
+  <div className="dw-card">
+    <div className="dw-card-top">
+      <Avatar size={40} icon={<UserOutlined />} className="dw-avatar" />
+      <div className="dw-card-top-info">
+        <div className="dw-card-name">{record.employerId?.name || "—"}</div>
+        <div className="dw-card-date">{record.entryDate || "—"}</div>
+      </div>
+      <Tag color={ATTENDANCE_COLOR[record.attendance] || "default"}>
+        {labelOf(ATTENDANCE_OPTIONS, record.attendance)}
+      </Tag>
+    </div>
+
+    <div className="dw-card-grid">
+      <div>
+        <div className="dw-card-field-label">Site</div>
+        <div className="dw-card-field-value">{record.currentSite || "—"}</div>
+      </div>
+      <div>
+        <div className="dw-card-field-label">Status</div>
+        <div className="dw-card-field-value">
+          <Tag color={STATUS_COLOR[record.workStatus] || "default"}>
+            {labelOf(WORK_STATUS_OPTIONS, record.workStatus)}
+          </Tag>
+        </div>
+      </div>
+      <div>
+        <div className="dw-card-field-label">Salary</div>
+        <div className="dw-card-field-value">{money(record.salary)}</div>
+      </div>
+      <div>
+        <div className="dw-card-field-label">Overtime</div>
+        <div className="dw-card-field-value">
+          {record.overtimeHours || 0} hrs ({money(record.overtimeAmount)})
+        </div>
+      </div>
+      <div>
+        <div className="dw-card-field-label">Advance</div>
+        <div className="dw-card-field-value">{money(record.advanceAmount)}</div>
+      </div>
+    </div>
+
+    <div className="dw-card-actions">
+      <Button icon={<EditOutlined />} onClick={() => onEdit(record)}>
+        Edit
+      </Button>
+      <Popconfirm
+        title="Delete this entry?"
+        okText="Delete"
+        okButtonProps={{ danger: true, loading: deleting }}
+        onConfirm={() => onDelete(record)}
+      >
+        <Button danger icon={<DeleteOutlined />} />
+      </Popconfirm>
+    </div>
+  </div>
+);
+
+// =====================================================================
+// Main page
+// =====================================================================
 const DailyWorkManagement = () => {
   const dispatch = useDispatch();
   const { entries = [], pagination = {}, get_status, get_error: error, workersList = [] } =
@@ -173,30 +245,47 @@ const DailyWorkManagement = () => {
       {
         title: "Worker",
         key: "worker",
-        width: 160,
-        render: (_, r) => r.employerId?.name || "—",
+        fixed: "left",
+        width: 170,
+        render: (_, r) => (
+          <div className="dw-name-cell">
+            <Avatar size={32} icon={<UserOutlined />} className="dw-avatar" />
+            <span className="dw-name-cell-name">{r.employerId?.name || "—"}</span>
+          </div>
+        ),
       },
       { title: "Date", dataIndex: "entryDate", key: "entryDate", width: 110 },
-      { title: "Site", dataIndex: "currentSite", key: "currentSite", render: (v) => v || "—" },
+      { title: "Site", dataIndex: "currentSite", key: "currentSite", width: 140, render: (v) => v || "—" },
       {
         title: "Attendance",
         dataIndex: "attendance",
         key: "attendance",
+        width: 110,
         render: (v) => <Tag color={ATTENDANCE_COLOR[v] || "default"}>{labelOf(ATTENDANCE_OPTIONS, v)}</Tag>,
       },
       {
         title: "Status",
         dataIndex: "workStatus",
         key: "workStatus",
+        width: 120,
         render: (v) => <Tag color={STATUS_COLOR[v] || "default"}>{labelOf(WORK_STATUS_OPTIONS, v)}</Tag>,
       },
-      { title: "Salary", dataIndex: "salary", key: "salary", render: money },
+      { title: "Salary", dataIndex: "salary", key: "salary", width: 100, render: money },
       {
         title: "Overtime",
         key: "overtime",
+        width: 150,
+        responsive: ["xl"],
         render: (_, r) => `${r.overtimeHours || 0} hrs (${money(r.overtimeAmount)})`,
       },
-      { title: "Advance", dataIndex: "advanceAmount", key: "advanceAmount", render: money },
+      {
+        title: "Advance",
+        dataIndex: "advanceAmount",
+        key: "advanceAmount",
+        width: 100,
+        responsive: ["xl"],
+        render: money,
+      },
       {
         title: "Actions",
         key: "actions",
@@ -223,91 +312,126 @@ const DailyWorkManagement = () => {
   return (
     <div className="dw-root">
       <div className="dw-header">
-        <div>
-          <Title level={3} className="dw-title">
-            Daily Work / Attendance
-          </Title>
-          <span className="dw-subtitle">Add each worker's day — site, attendance, overtime, advance</span>
+        <div className="dw-header-top">
+          <div>
+            <Title level={3} className="dw-title">
+              Daily Work / Attendance
+            </Title>
+            <span className="dw-subtitle">Add each worker's day — site, attendance, overtime, advance</span>
+          </div>
         </div>
-        <Button type="primary" icon={<PlusOutlined />} onClick={openAddModal}>
+        <Button type="primary" icon={<PlusOutlined />} className="dw-add-btn" onClick={openAddModal}>
           Add Daily Entry
         </Button>
       </div>
 
-      {error && <Alert type="error" showIcon message={typeof error === "string" ? error : "Something went wrong"} className="dw-error-alert" />}
+      {error && (
+        <Alert type="error" showIcon message={typeof error === "string" ? error : "Something went wrong"} className="dw-error-alert" />
+      )}
 
       <div className="dw-filters-card">
         <div className="dw-filters">
-          <Input
-            allowClear
-            placeholder="Search by worker name…"
-            className="dw-filter"
-            value={worker}
-            onChange={(e) => setWorker(e.target.value)}
-            onPressEnter={() => {
-              setPage(1);
-              fetchList({ worker: worker || undefined, page: 1 });
-            }}
-          />
-          <Select
-            allowClear
-            className="dw-filter"
-            placeholder="Attendance"
-            options={ATTENDANCE_OPTIONS}
-            value={attendance}
-            onChange={(v) => {
-              setAttendance(v);
-              setPage(1);
-            }}
-          />
-          <Select
-            allowClear
-            className="dw-filter"
-            placeholder="Work Status"
-            options={WORK_STATUS_OPTIONS}
-            value={workStatus}
-            onChange={(v) => {
-              setWorkStatus(v);
-              setPage(1);
-            }}
-          />
-          <RangePicker
-            className="dw-filter"
-            format="DD/MM/YYYY"
-            value={dateRange}
-            onChange={(v) => {
-              setDateRange(v);
-              setPage(1);
-            }}
-          />
-          <Button type="link" icon={<ReloadOutlined />} onClick={resetFilters}>
-            Reset
-          </Button>
-          <span className="dw-result-count">{total} entr{total === 1 ? "y" : "ies"}</span>
+          <div className="dw-filters-row">
+            <Input
+              allowClear
+              className="dw-search"
+              prefix={<SearchOutlined />}
+              placeholder="Search by worker name…"
+              value={worker}
+              onChange={(e) => setWorker(e.target.value)}
+              onPressEnter={() => {
+                setPage(1);
+                fetchList({ worker: worker || undefined, page: 1 });
+              }}
+            />
+            <Select
+              allowClear
+              className="dw-filter-select"
+              placeholder="Attendance"
+              options={ATTENDANCE_OPTIONS}
+              value={attendance}
+              onChange={(v) => {
+                setAttendance(v);
+                setPage(1);
+              }}
+            />
+            <Select
+              allowClear
+              className="dw-filter-select"
+              placeholder="Work Status"
+              options={WORK_STATUS_OPTIONS}
+              value={workStatus}
+              onChange={(v) => {
+                setWorkStatus(v);
+                setPage(1);
+              }}
+            />
+            <RangePicker
+              className="dw-date-range"
+              format="DD/MM/YYYY"
+              value={dateRange}
+              onChange={(v) => {
+                setDateRange(v);
+                setPage(1);
+              }}
+            />
+          </div>
+          <div className="dw-filters-footer">
+            <Button type="link" className="dw-reset-btn" icon={<ReloadOutlined />} onClick={resetFilters}>
+              Reset filters
+            </Button>
+            <span className="dw-result-count">{total} entr{total === 1 ? "y" : "ies"}</span>
+          </div>
         </div>
       </div>
 
       <Spin spinning={loading}>
-        <Table
-          rowKey="_id"
-          columns={columns}
-          dataSource={entries}
-          scroll={{ x: 1000 }}
-          locale={{ emptyText: <Empty description="No daily work entries found" /> }}
-          pagination={{
-            current: page,
-            pageSize,
-            total,
-            showSizeChanger: true,
-            pageSizeOptions: [10, 20, 50],
-            onChange: (p, ps) => {
-              setPage(p);
-              setPageSize(ps);
-            },
-          }}
-        />
+        {/* ---- Mobile card list ---- */}
+        <div className="dw-card-list">
+          {entries.length === 0 && !loading ? (
+            <Empty description="No daily work entries found" />
+          ) : (
+            entries.map((record) => (
+              <DailyWorkCard
+                key={record._id}
+                record={record}
+                onEdit={openEditModal}
+                onDelete={handleDelete}
+                deleting={deletingId === record._id}
+              />
+            ))
+          )}
+          {entries.length > 0 && (
+            <div className="dw-pagination-mobile">
+              <Pagination simple current={page} pageSize={pageSize} total={total} onChange={setPage} />
+            </div>
+          )}
+        </div>
+
+        {/* ---- Tablet / laptop / desktop table ---- */}
+        <div className="dw-table-wrap">
+          <Table
+            rowKey="_id"
+            columns={columns}
+            dataSource={entries}
+            scroll={{ x: 1050 }}
+            locale={{ emptyText: <Empty description="No daily work entries found" /> }}
+            pagination={{
+              current: page,
+              pageSize,
+              total,
+              showSizeChanger: true,
+              pageSizeOptions: [10, 20, 50],
+              onChange: (p, ps) => {
+                setPage(p);
+                setPageSize(ps);
+              },
+            }}
+          />
+        </div>
       </Spin>
 
+      {/* =================== ADD / EDIT MODAL =================== */}
       <Modal
         open={formOpen}
         onCancel={closeFormModal}
@@ -331,7 +455,10 @@ const DailyWorkManagement = () => {
                 onChange={handleWorkerChange}
                 options={workersList.map((w) => ({
                   value: w._id,
-                  label: `${w.name} (${w.workerId})`,
+                  label: `${w.name} (${labelOf(
+                    [{ value: "mazdoor", label: "Mazdoor" }, { value: "qarigar", label: "Qarigar" }],
+                    w.designation,
+                  )})`,
                 }))}
               />
             </Form.Item>

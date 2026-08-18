@@ -20,6 +20,7 @@ import PublicRoute from "./routes/PublicRoutes.jsx";
 import { ScrollToTop } from "./components/ScrollToTop";
 import "./App.css";
 import DailyWorkManagement from "./pages/DailyWorkManagement.jsx";
+import SalarySlip from "./pages/SalarySlip.jsx";
 
 const AppRoutes = () => {
   return (
@@ -112,6 +113,28 @@ const AppRoutes = () => {
           <ProtectedRoute>
             <AdminLayout>
               <FactoryWorkDetail />
+            </AdminLayout>
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/salary-slip"
+        element={
+          <ProtectedRoute>
+            <AdminLayout>
+              <SalarySlip />
+            </AdminLayout>
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/salary-slip/:workerId"
+        element={
+          <ProtectedRoute>
+            <AdminLayout>
+              <SalarySlip />
             </AdminLayout>
           </ProtectedRoute>
         }

@@ -4,7 +4,7 @@ import dashboardReducer from "./slices/dashboardSlice.js";
 import employerReducer from "./slices/employerSlice.js";
 import dailyWorkReducer from "./slices/dailyWorkSlice.js";
 import factoryWorkReducer from "./slices/factoryWorkSlice.js";
-// import salarySlipReducer from "./slices/salarySlipSlice.js";
+import salarySlipReducer from "./slices/salarySlipSlice.js";
 import {
   persistStore,
   persistReducer,
@@ -34,7 +34,7 @@ const rootReducer = combineReducers({
   employer: employerReducer,
   dailyWork: dailyWorkReducer,
   factoryWork: factoryWorkReducer,
-  // salarySlip: salarySlipReducer,
+  salarySlip: salarySlipReducer,
 
 })
 
@@ -42,12 +42,9 @@ const persistedReducer = persistReducer(persistConfig, rootReducer)
 
 export const store = configureStore({
   reducer: persistedReducer,
-  middleware: getDefaultMiddleware =>
-    getDefaultMiddleware({
-      serializableCheck: {
-        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER]
-      }
-    })
+  middleware: getDefaultMiddleware => getDefaultMiddleware({
+    serializableCheck: { ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER] }
+  })
 })
 
 export const persistor = persistStore(store)

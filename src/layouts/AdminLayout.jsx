@@ -44,6 +44,7 @@ const NAV_SECTIONS = [
       { key: 'users',  Icon: UserCheck, label: 'Users',  path: '/users' },
       { key: 'dailyWork',  Icon: Factory, label: 'Daily Work',  path: '/daily-work' },
       { key: 'factoryWork',  Icon: Factory, label: 'Factory Work',  path: '/factory-work' },
+      { key: 'salarySlip',  Icon: ClipboardList, label: 'Salary Slip',  path: '/salary-slip' },
     ],
   },
   // {
@@ -103,7 +104,7 @@ const AdminLayout = ({ children }) => {
         "users",
         "dailyWork",
         "factoryWork",
-        // "salaryslips",
+        "salarySlip",
 
       ],
       admin: [
@@ -111,7 +112,7 @@ const AdminLayout = ({ children }) => {
         "users",
         "dailyWork",
         "factoryWork",
-        // "salaryslips",
+        "salarySlip",
       ],
     };
 
@@ -158,7 +159,17 @@ const AdminLayout = ({ children }) => {
     if (isMobile) setMobileOpen(false);
   };
 
-  const activeKey = location.pathname.split("/")[1] || "dashboard";
+  const normalizeRouteKey = (pathname) => {
+    const segment = pathname.split("/")[1] || "dashboard";
+    const routeKeyMap = {
+      "daily-work": "dailyWork",
+      "factory-work": "factoryWork",
+      "salary-slip": "salarySlip",
+    };
+    return routeKeyMap[segment] || segment;
+  };
+
+  const activeKey = normalizeRouteKey(location.pathname);
 
   const sidebarCls = [
     "al-sidebar",
