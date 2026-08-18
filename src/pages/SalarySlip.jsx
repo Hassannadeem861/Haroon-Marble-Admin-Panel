@@ -15,6 +15,8 @@ const { Title } = Typography;
 const { RangePicker } = DatePicker;
 
 const DESIGNATION_LABEL = { mazdoor: "Mazdoor", qarigar: "Qarigar" };
+const WORK_UNDER_LABEL = { owner: "Owner", partnerShip: "Partner Ship", client: "Client" };
+const WORK_UNDER = {}
 const ATTENDANCE_LABEL = { present: "Present", absent: "Absent" };
 
 const money = (v) => `Rs. ${Number(v || 0).toLocaleString()}`;
@@ -224,6 +226,7 @@ const SalarySlip = () => {
                       <th>Date</th>
                       <th>Site</th>
                       <th>Attendance</th>
+                      <th>Work Under</th>
                       <th>Salary</th>
                       <th>Overtime</th>
                       <th>Advance</th>
@@ -241,6 +244,11 @@ const SalarySlip = () => {
                           <td>
                             <span className={`ssp-tag ssp-tag--${e.attendance}`}>
                               {ATTENDANCE_LABEL[e.attendance] || e.attendance}
+                            </span>
+                          </td>
+                          <td>
+                            <span className={`ssp-tag ssp-tag--${e.workUnder}`}>
+                              {WORK_UNDER_LABEL[e.workUnder] || e.workUnder}
                             </span>
                           </td>
                           <td>{money(e.salary)}</td>

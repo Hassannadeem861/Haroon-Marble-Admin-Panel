@@ -54,6 +54,8 @@ const WORK_UNDER_OPTIONS = [
   { value: "client", label: "Client" },
 ];
 
+const WORK_UNDER_COLOR = { owner: "success", partnerShip: "processing", client: "warning" };
+
 const ATTENDANCE_COLOR = { present: "success", absent: "error" };
 const STATUS_COLOR = { pending: "warning", inprogress: "processing", completed: "success" };
 
@@ -88,6 +90,12 @@ const DailyWorkCard = ({ record, onEdit, onDelete, deleting }) => (
             {labelOf(WORK_STATUS_OPTIONS, record.workStatus)}
           </Tag>
         </div>
+        {/* <div >
+          <div className="dw-card-field-label">Work Under</div>
+          <Tag color={WORK_UNDER_COLOR[record.workUnder] || "default"}>
+            {labelOf(WORK_UNDER_OPTIONS, record.workUnder)}
+          </Tag>
+        </div> */}
       </div>
       <div>
         <div className="dw-card-field-label">Salary</div>
@@ -103,7 +111,16 @@ const DailyWorkCard = ({ record, onEdit, onDelete, deleting }) => (
         <div className="dw-card-field-label">Advance</div>
         <div className="dw-card-field-value">{money(record.advanceAmount)}</div>
       </div>
+
+       <div >
+          <div className="dw-card-field-label">Work Under</div>
+          <Tag color={WORK_UNDER_COLOR[record.workUnder] || "default"}>
+            {labelOf(WORK_UNDER_OPTIONS, record.workUnder)}
+          </Tag>
+        </div> 
     </div>
+
+    
 
     <div className="dw-card-actions">
       <Button icon={<EditOutlined />} onClick={() => onEdit(record)}>
@@ -262,6 +279,13 @@ const DailyWorkManagement = () => {
         key: "attendance",
         width: 110,
         render: (v) => <Tag color={ATTENDANCE_COLOR[v] || "default"}>{labelOf(ATTENDANCE_OPTIONS, v)}</Tag>,
+      },
+      {
+        title: "Work Under",
+        dataIndex: "workUnder",
+        key: "workUnder",
+        width: 110,
+        render: (v) => <Tag color={WORK_UNDER_COLOR[v] || "default"}>{labelOf(WORK_UNDER_OPTIONS, v)}</Tag>,
       },
       {
         title: "Status",
