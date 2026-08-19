@@ -764,7 +764,7 @@ const SiteManagement = () => {
         ),
       },
       {
-        title: "Owner / Client",
+        title: "Client Name",
         dataIndex: "ownerName",
         key: "ownerName",
         width: 160,
@@ -948,7 +948,7 @@ const SiteManagement = () => {
                 optionFilterProp="label"
               />
             </Form.Item>
-            <Form.Item label="Owner / Client Name" name="ownerName">
+            <Form.Item label="Client Name" name="ownerName">
               <Input placeholder="e.g. Mr. Ahmed" />
             </Form.Item>
             {editingRecord && (
