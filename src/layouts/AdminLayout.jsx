@@ -45,6 +45,7 @@ const NAV_SECTIONS = [
       { key: 'dailyWork',  Icon: Factory, label: 'Daily Work',  path: '/daily-work' },
       { key: 'factoryWork',  Icon: Factory, label: 'Factory Work',  path: '/factory-work' },
       { key: 'salarySlip',  Icon: ClipboardList, label: 'Salary Slip',  path: '/salary-slip' },
+      { key: 'site',  Icon: Factory, label: 'Site',  path: '/site' },
     ],
   },
   // {
@@ -105,6 +106,7 @@ const AdminLayout = ({ children }) => {
         "dailyWork",
         "factoryWork",
         "salarySlip",
+        "site",
 
       ],
       admin: [
@@ -113,6 +115,7 @@ const AdminLayout = ({ children }) => {
         "dailyWork",
         "factoryWork",
         "salarySlip",
+        "site"
       ],
     };
 

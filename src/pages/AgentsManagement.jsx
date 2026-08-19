@@ -275,7 +275,7 @@ const WorkerDetailDrawer = ({ open, workerId, onClose }) => {
             </div>
 
             <Descriptions
-              column={2}
+              column={{ xs: 1, sm: 2 }}
               size="small"
               bordered
               className="wm-drawer-descriptions"

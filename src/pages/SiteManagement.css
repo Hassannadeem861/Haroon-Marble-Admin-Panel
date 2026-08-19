@@ -1,0 +1,260 @@
+:root {
+  --navy: #0C1036;
+  --navy-06: rgba(12, 16, 54, 0.06);
+  --navy-10: rgba(12, 16, 54, 0.10);
+  --accent: #386CFF;
+  --accent-08: rgba(56, 108, 255, 0.08);
+  --accent-15: rgba(56, 108, 255, 0.15);
+  --border: #E6E9F2;
+  --muted: #64748B;
+  --bg-soft: #F7F8FC;
+  --danger: #E5484D;
+  --success: #16A34A;
+  --warn: #D97706;
+}
+
+* { box-sizing: border-box; }
+
+/* ============ LAYOUT SHELL — mobile first ============ */
+.sm-root {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  padding: 14px 12px 40px;
+  margin: 0 auto;
+  background: var(--bg-soft);
+  min-height: 100vh;
+}
+
+.sm-header {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.sm-header-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.sm-title {
+  margin: 0 !important;
+  font-weight: 800 !important;
+  color: var(--navy) !important;
+  font-size: 20px !important;
+  line-height: 1.2 !important;
+}
+
+.sm-subtitle {
+  display: block;
+  margin-top: 4px;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.sm-add-btn {
+  width: 100%;
+  height: 42px !important;
+  font-weight: 600 !important;
+  border-radius: 10px !important;
+}
+
+.sm-error-alert {
+  margin-bottom: 14px;
+  border-radius: 10px;
+}
+
+/* ============ AVATAR ============ */
+.sm-avatar {
+  background: var(--accent-15) !important;
+  color: var(--accent) !important;
+  flex-shrink: 0;
+}
+.sm-avatar-lg { font-size: 22px; }
+
+/* ============ FILTERS ============ */
+.sm-filters-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 12px;
+  margin-bottom: 16px;
+}
+.sm-filters { display: flex; flex-direction: column; gap: 10px; }
+.sm-filters-row { display: grid; grid-template-columns: 1fr; gap: 10px; }
+.sm-search .ant-input-affix-wrapper,
+.sm-filter-select .ant-select-selector { width: 100%; }
+.sm-filters-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+.sm-reset-btn { padding: 0 !important; font-weight: 600 !important; }
+.sm-result-count { font-size: 12.5px; color: var(--muted); white-space: nowrap; }
+
+/* ============ MOBILE CARD LIST ============ */
+.sm-card-list { display: flex; flex-direction: column; gap: 12px; }
+.sm-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: 14px;
+  padding: 14px 14px 12px;
+  box-shadow: 0 1px 2px rgba(12, 16, 54, 0.04);
+}
+.sm-card--completed { border-left-color: var(--muted); opacity: 0.85; }
+.sm-card--on_hold { border-left-color: var(--warn); }
+
+.sm-card-top { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.sm-card-top-info { flex: 1; min-width: 0; }
+.sm-card-name { font-weight: 700; font-size: 15.5px; color: var(--navy); line-height: 1.3; }
+.sm-card-location { font-size: 11.5px; color: var(--muted); margin-top: 2px; }
+
+.sm-card-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 10px;
+  padding: 10px 0;
+  border-top: 1px dashed var(--border);
+  border-bottom: 1px dashed var(--border);
+  margin-bottom: 10px;
+}
+.sm-card-field-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--muted);
+  margin-bottom: 2px;
+}
+.sm-card-field-value { font-size: 13.5px; font-weight: 600; color: var(--navy); word-break: break-word; }
+
+.sm-card-actions { display: flex; gap: 8px; }
+.sm-card-actions .ant-btn { flex: 1; border-radius: 9px !important; font-weight: 600 !important; }
+
+/* ============ DESKTOP TABLE (hidden on mobile) ============ */
+.sm-table-wrap { display: none; }
+.sm-table-wrap .ant-table { border-radius: 14px; overflow: hidden; }
+.sm-table-wrap .ant-table-thead > tr > th {
+  background: var(--navy) !important;
+  color: #fff !important;
+  font-weight: 600;
+  font-size: 12.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+.sm-table-wrap .ant-table-tbody > tr > td { font-size: 13.5px; color: var(--navy); }
+.sm-table-wrap .ant-table-tbody > tr:hover > td { background: var(--accent-08) !important; }
+
+.sm-name-cell { display: flex; align-items: center; gap: 10px; }
+.sm-name-cell-name { font-weight: 700; }
+.sm-name-cell-loc { font-size: 11.5px; color: var(--muted); }
+
+.sm-actions-cell { display: flex; gap: 6px; }
+.sm-pagination-mobile { display: flex; justify-content: center; margin-top: 18px; }
+
+/* ============ DETAIL DRAWER ============ */
+.sm-drawer-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-bottom: 16px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.sm-drawer-header h3 { margin: 0 !important; color: var(--navy) !important; }
+.sm-drawer-location { font-size: 12px; color: var(--muted); }
+.sm-drawer-status { margin-left: auto; }
+.sm-drawer-descriptions { margin-bottom: 20px; }
+
+.sm-section-title { font-weight: 700; color: var(--navy); font-size: 14px; margin-bottom: 10px; }
+.sm-summary-block { margin-bottom: 18px; }
+
+.sm-stat-card {
+  background: var(--accent-08);
+  border: 1px solid var(--accent-15);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+.sm-stat-card .ant-statistic-title { font-size: 11.5px; color: var(--muted); }
+.sm-stat-card .ant-statistic-content { font-size: 16px; color: var(--navy); font-weight: 700; }
+
+.sm-tabs { margin-top: 6px; }
+.sm-tab-toolbar { display: flex; justify-content: flex-end; margin-bottom: 12px; }
+.sm-recent-pagination { display: flex; justify-content: center; margin-top: 14px; }
+
+/* ============ FORM MODAL ============ */
+.sm-form-grid { display: grid; grid-template-columns: 1fr; gap: 0 16px; }
+.sm-form-actions {
+  margin-top: 4px;
+  margin-bottom: 0;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+.sm-form-actions .ant-btn { width: 100%; }
+
+/* ============ TABLET (>= 640px) ============ */
+@media (min-width: 640px) {
+  .sm-root { padding: 20px 20px 40px; }
+  .sm-header-top { align-items: center; }
+  .sm-add-btn { width: auto; }
+  .sm-filters-row { grid-template-columns: 1fr 1fr; }
+  .sm-card-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* ============ LAPTOP / SMALL DESKTOP (>= 900px): switch to table ============ */
+@media (min-width: 900px) {
+  .sm-card-list { display: none; }
+  .sm-table-wrap { display: block; }
+  .sm-header { flex-direction: row; align-items: center; justify-content: space-between; }
+  .sm-title { font-size: 24px !important; }
+  .sm-filters { flex-direction: row; align-items: center; flex-wrap: wrap; }
+  .sm-filters-row { flex: 1 1 auto; display: flex; flex-wrap: wrap; gap: 10px; }
+  .sm-search { flex: 2 1 240px; }
+  .sm-filter-select { flex: 1 1 140px; min-width: 130px; }
+  .sm-filters-footer { flex: 0 0 auto; }
+  .sm-form-grid { grid-template-columns: 1fr 1fr; }
+  .sm-form-actions .ant-btn { width: auto; }
+}
+
+/* Antd calendar dropdown renders outside .sm-root (in a portal),
+   so it needs its own mobile fix */
+@media (max-width: 480px) {
+  .ant-picker-dropdown { left: 8px !important; right: 8px !important; width: calc(100vw - 16px) !important; }
+  .ant-picker-dropdown .ant-picker-panel-container,
+  .ant-picker-dropdown .ant-picker-panel,
+  .ant-picker-dropdown .ant-picker-date-panel,
+  .ant-picker-dropdown .ant-picker-content { width: 100% !important; }
+  .ant-picker-dropdown .ant-picker-content th,
+  .ant-picker-dropdown .ant-picker-content td { width: auto !important; }
+}
+
+/* ============ DESKTOP (>= 1200px) ============ */
+@media (min-width: 1200px) {
+  .sm-root { padding: 28px 32px 48px; }
+}
+
+/* ============ DESCRIPTIONS — mobile fix ============ */
+.sm-drawer-descriptions .ant-descriptions-item-label,
+.wm-drawer-descriptions .ant-descriptions-item-label {
+  font-size: 11.5px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.sm-drawer-descriptions .ant-descriptions-item-content,
+.wm-drawer-descriptions .ant-descriptions-item-content {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--navy);
+  word-break: break-word;
+}
+
+@media (max-width: 480px) {
+  .sm-drawer-descriptions .ant-descriptions-view table,
+  .wm-drawer-descriptions .ant-descriptions-view table {
+    table-layout: auto !important;
+  }
+}

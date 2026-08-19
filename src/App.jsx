@@ -21,6 +21,7 @@ import { ScrollToTop } from "./components/ScrollToTop";
 import "./App.css";
 import DailyWorkManagement from "./pages/DailyWorkManagement.jsx";
 import SalarySlip from "./pages/SalarySlip.jsx";
+import SiteManagement from "./pages/SiteManagement.jsx";
 
 const AppRoutes = () => {
   return (
@@ -58,16 +59,16 @@ const AppRoutes = () => {
         }
       />
 
-      {/* <Route
-        path="/salary-slip"
+      <Route
+        path="/site"
         element={
           <ProtectedRoute>
             <AdminLayout>
-              <SalaryPayments />
+              <SiteManagement />
             </AdminLayout>
           </ProtectedRoute>
         }
-      /> */}
+      />
 
       {/* ========== REDIRECTS ========== */}
       <Route path="/" element={<Navigate to="/dashboard" replace />} />

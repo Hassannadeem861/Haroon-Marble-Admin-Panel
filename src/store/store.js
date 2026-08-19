@@ -5,6 +5,8 @@ import employerReducer from "./slices/employerSlice.js";
 import dailyWorkReducer from "./slices/dailyWorkSlice.js";
 import factoryWorkReducer from "./slices/factoryWorkSlice.js";
 import salarySlipReducer from "./slices/salarySlipSlice.js";
+import siteReducer from "./slices/siteSlice.js";
+
 import {
   persistStore,
   persistReducer,
@@ -35,6 +37,7 @@ const rootReducer = combineReducers({
   dailyWork: dailyWorkReducer,
   factoryWork: factoryWorkReducer,
   salarySlip: salarySlipReducer,
+  site: siteReducer,
 
 })
 
