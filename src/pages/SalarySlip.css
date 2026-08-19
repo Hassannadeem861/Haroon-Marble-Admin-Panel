@@ -74,13 +74,18 @@
 
 .ssp-sheet-header {
   display: flex;
+  justify-content: center;
   align-items: center;
   gap: 14px;
+  min-height: 64px;
 }
 
 .ssp-logo {
-  height: 48px;
-  width: auto;
+  display: block;
+  width: 210px;
+  max-width: 100%;
+  height: auto;
+  max-height: 64px;
   object-fit: contain;
 }
 
@@ -277,6 +282,8 @@
   .ssp-controls-row { flex-direction: row; flex-wrap: wrap; align-items: center; }
   .ssp-control { width: auto; flex: 1 1 200px; }
   .ssp-sheet { padding: 32px 40px; }
+  .ssp-sheet-header { min-height: 76px; }
+  .ssp-logo { width: 250px; max-height: 76px; }
   .ssp-meta-grid { grid-template-columns: repeat(4, 1fr); }
   .ssp-summary-grid { grid-template-columns: repeat(3, 1fr); }
   .ssp-summary-card--highlight { grid-column: auto; }
@@ -284,6 +291,8 @@
 
 @media (min-width: 1200px) {
   .ssp-root { padding: 28px 32px 48px; }
+  .ssp-sheet-header { min-height: 88px; }
+  .ssp-logo { width: 290px; max-height: 88px; }
 }
 
 /* ============ PRINT ============ */

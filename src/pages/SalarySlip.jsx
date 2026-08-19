@@ -1,6 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Select, DatePicker, Button, Typography, Spin, Empty, Alert, Segmented } from "antd";
+import {
+  Select,
+  DatePicker,
+  Button,
+  Typography,
+  Spin,
+  Empty,
+  Alert,
+  Segmented,
+} from "antd";
 import { DownloadOutlined, PrinterOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 import jsPDF from "jspdf";
@@ -15,8 +24,12 @@ const { Title } = Typography;
 const { RangePicker } = DatePicker;
 
 const DESIGNATION_LABEL = { mazdoor: "Mazdoor", qarigar: "Qarigar" };
-const WORK_UNDER_LABEL = { owner: "Owner", partnerShip: "Partner Ship", client: "Client" };
-const WORK_UNDER = {}
+const WORK_UNDER_LABEL = {
+  owner: "Owner",
+  partnerShip: "Partner Ship",
+  client: "Client",
+};
+const WORK_UNDER = {};
 const ATTENDANCE_LABEL = { present: "Present", absent: "Absent" };
 
 const money = (v) => `Rs. ${Number(v || 0).toLocaleString()}`;
@@ -70,7 +83,10 @@ const SalarySlip = () => {
     if (!printRef.current || !slip) return;
     setDownloading(true);
     try {
-      const canvas = await html2canvas(printRef.current, { scale: 2, backgroundColor: "#ffffff" });
+      const canvas = await html2canvas(printRef.current, {
+        scale: 2,
+        backgroundColor: "#ffffff",
+      });
       const imgData = canvas.toDataURL("image/png");
       const pdf = new jsPDF("p", "mm", "a4");
       const pageWidth = pdf.internal.pageSize.getWidth();
@@ -133,14 +149,24 @@ const SalarySlip = () => {
               onChange={setCustomRange}
             />
           )}
-          <Button type="primary" className="ssp-control" onClick={handleGenerate} disabled={!employerId}>
+          <Button
+            type="primary"
+            className="ssp-control"
+            onClick={handleGenerate}
+            disabled={!employerId}
+          >
             Generate Slip
           </Button>
         </div>
       </div>
 
       {status === "error" && (
-        <Alert type="error" showIcon message="Salary slip nahi ban saka — dobara try karein." className="ssp-error ssp-no-print" />
+        <Alert
+          type="error"
+          showIcon
+          message="Salary slip nahi ban saka — dobara try karein."
+          className="ssp-error ssp-no-print"
+        />
       )}
 
       <Spin spinning={loading}>
@@ -150,18 +176,27 @@ const SalarySlip = () => {
               <Button icon={<PrinterOutlined />} onClick={handlePrint}>
                 Print
               </Button>
-              <Button type="primary" icon={<DownloadOutlined />} loading={downloading} onClick={handleDownloadPdf}>
+              <Button
+                type="primary"
+                icon={<DownloadOutlined />}
+                loading={downloading}
+                onClick={handleDownloadPdf}
+              >
                 Download PDF
               </Button>
             </div>
 
             <div className="ssp-sheet" ref={printRef}>
               <div className="ssp-sheet-header">
-                <img src={companyLogo} alt="Haroon Marbles" className="ssp-logo" />
-                <div className="ssp-company-info">
+                <img
+                  src={companyLogo}
+                  alt="Haroon Marbles"
+                  className="ssp-logo"
+                />
+                {/* <div className="ssp-company-info">
                   <div className="ssp-company-name">Haroon Marbles</div>
                   <div className="ssp-slip-label">Worker Salary Slip</div>
-                </div>
+                </div> */}
               </div>
 
               <div className="ssp-divider" />
@@ -174,7 +209,8 @@ const SalarySlip = () => {
                 <div>
                   <div className="ssp-meta-label">Designation</div>
                   <div className="ssp-meta-value">
-                    {DESIGNATION_LABEL[slip.employer?.designation] || slip.employer?.designation}
+                    {DESIGNATION_LABEL[slip.employer?.designation] ||
+                      slip.employer?.designation}
                   </div>
                 </div>
                 <div>
@@ -185,7 +221,9 @@ const SalarySlip = () => {
                 </div>
                 <div>
                   <div className="ssp-meta-label">Generated On</div>
-                  <div className="ssp-meta-value">{dayjs().format("DD MMM YYYY")}</div>
+                  <div className="ssp-meta-value">
+                    {dayjs().format("DD MMM YYYY")}
+                  </div>
                 </div>
               </div>
 
@@ -200,85 +238,108 @@ const SalarySlip = () => {
                 </div>
                 <div className="ssp-summary-card">
                   <div className="ssp-summary-label">Base Salary</div>
-                  <div className="ssp-summary-value">{money(slip.totalBaseSalary)}</div>
+                  <div className="ssp-summary-value">
+                    {money(slip.totalBaseSalary)}
+                  </div>
                 </div>
                 <div className="ssp-summary-card">
                   <div className="ssp-summary-label">Overtime</div>
                   <div className="ssp-summary-value">
-                    {slip.totalOvertimeHours || 0} hrs / {money(slip.totalOvertimeAmount)}
+                    {slip.totalOvertimeHours || 0} hrs /{" "}
+                    {money(slip.totalOvertimeAmount)}
                   </div>
                 </div>
                 <div className="ssp-summary-card">
                   <div className="ssp-summary-label">Advance Taken</div>
-                  <div className="ssp-summary-value">{money(slip.totalAdvance)}</div>
+                  <div className="ssp-summary-value">
+                    {money(slip.totalAdvance)}
+                  </div>
                 </div>
                 <div className="ssp-summary-card ssp-summary-card--highlight">
                   <div className="ssp-summary-label">Net Payable</div>
-                  <div className="ssp-summary-value ssp-net-value">{money(slip.netSalary)}</div>
+                  <div className="ssp-summary-value ssp-net-value">
+                    {money(slip.netSalary)}
+                  </div>
                 </div>
               </div>
 
               <div className="ssp-section-title">Daily Records</div>
               {slip.entries && slip.entries.length > 0 ? (
-                <table className="ssp-table">
-                  <thead>
-                    <tr>
-                      <th>Date</th>
-                      <th>Site</th>
-                      <th>Attendance</th>
-                      <th>Work Under</th>
-                      <th>Salary</th>
-                      <th>Overtime</th>
-                      <th>Advance</th>
-                      <th>Net Salary</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {slip.entries.map((e) => {
-                      const net = (e.salary || 0) + (e.overtimeAmount || 0) - (e.advanceAmount || 0);
-                    //   console.log("net", net, e.salary, e.overtimeAmount, e.advanceAmount);
-                      return (
-                        <tr key={e._id}>
-                          <td>{e.entryDate}</td>
-                          <td>{e.currentSite || "—"}</td>
-                          <td>
-                            <span className={`ssp-tag ssp-tag--${e.attendance}`}>
-                              {ATTENDANCE_LABEL[e.attendance] || e.attendance}
-                            </span>
-                          </td>
-                          <td>
-                            <span className={`ssp-tag ssp-tag--${e.workUnder}`}>
-                              {WORK_UNDER_LABEL[e.workUnder] || e.workUnder}
-                            </span>
-                          </td>
-                          <td>{money(e.salary)}</td>
-                          <td>
-                            {e.overtimeHours || 0} hrs / {money(e.overtimeAmount)}
-                          </td>
-                          <td>{money(e.advanceAmount)}</td>
-                          <td className="ssp-net-cell">{money(net)}</td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
+                // <div className="ssp-table-wrap">
+                  <table className="ssp-table">
+                    <thead>
+                      <tr>
+                        <th>Date</th>
+                        <th>Site</th>
+                        <th>Attendance</th>
+                        <th>Work Under</th>
+                        <th>Salary</th>
+                        <th>Overtime</th>
+                        <th>Advance</th>
+                        <th>Net Salary</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {slip.entries.map((e) => {
+                        const net = (e.salary || 0) + (e.overtimeAmount || 0) - (e.advanceAmount || 0);
+                        //   console.log("net", net, e.salary, e.overtimeAmount, e.advanceAmount);
+                        return (
+                          <tr key={e._id}>
+                            <td>{e.entryDate}</td>
+                            <td>{e.currentSite || "—"}</td>
+                            <td>
+                              <span
+                                className={`ssp-tag ssp-tag--${e.attendance}`}
+                              >
+                                {ATTENDANCE_LABEL[e.attendance] || e.attendance}
+                              </span>
+                            </td>
+                            <td>
+                              <span
+                                className={`ssp-tag ssp-tag--${e.workUnder}`}
+                              >
+                                {WORK_UNDER_LABEL[e.workUnder] || e.workUnder}
+                              </span>
+                            </td>
+                            <td>{money(e.salary)}</td>
+                            <td>
+                              {e.overtimeHours || 0} hrs /{" "}
+                              {money(e.overtimeAmount)}
+                            </td>
+                            <td>{money(e.advanceAmount)}</td>
+                            <td className="ssp-net-cell">{money(net)}</td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                // </div>
               ) : (
-                <Empty description="Is period mein koi daily record nahi mila" className="ssp-no-print" />
+                <Empty
+                  description="Is period mein koi daily record nahi mila"
+                  className="ssp-no-print"
+                />
               )}
 
               <div className="ssp-signatures">
                 <div className="ssp-signature-block">
-                  <img src={employerSignature} alt="Employer signature" className="ssp-signature-image" />
+                  <img
+                    src={employerSignature}
+                    alt="Employer signature"
+                    className="ssp-signature-image"
+                  />
                   <div className="ssp-signature-line" />
-                  <div className="ssp-signature-label">Employer Signature</div>
+                  <div className="ssp-signature-label">Admin Signature</div>
                 </div>
-                <div className="ssp-signature-block">
+                {/* <div className="ssp-signature-block">
                   <div className="ssp-signature-line" />
                   <div className="ssp-signature-label">Worker Signature</div>
-                </div>
+                </div> */}
               </div>
 
-              <div className="ssp-footer-note">This is a computer-generated salary slip — Haroon Marbles</div>
+              <div className="ssp-footer-note">
+                This is a computer-generated salary slip — Haroon Marbles
+              </div>
             </div>
           </>
         ) : (
