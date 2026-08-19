@@ -1,39 +1,36 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { asyncStatus } from "../../utils/asyncStatus";
-import { getDashboardAsync } from "../services/dashboardService";
+import { getDashboardSummaryAsync } from "../services/dashboardService.js";
 
 const initialState = {
-  dashboard: null,
-  get_status: asyncStatus.IDLE,
-  get_error: null,
+  statCards: null,
+  recentActivity: null,
+  charts: null,
+  status: asyncStatus.IDLE,
+  error: null,
 };
 
 const dashboardSlice = createSlice({
   name: "dashboard",
   initialState,
-  reducers: {
-    resetDashboardStatus: (state) => {
-      state.get_status = asyncStatus.IDLE;
-      state.get_error = null;
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(getDashboardAsync.pending, (state) => {
-        state.get_status = asyncStatus.LOADING;
-        state.get_error = null;
+      .addCase(getDashboardSummaryAsync.pending, (state) => {
+        state.status = asyncStatus.LOADING;
+        state.error = null;
       })
-      .addCase(getDashboardAsync.fulfilled, (state, { payload }) => {
-        // Real response shape: { success: true, dashboard: {...} }
-        state.get_status = asyncStatus.SUCCEEDED;
-        state.dashboard = payload?.dashboard || null;
+      .addCase(getDashboardSummaryAsync.fulfilled, (state, { payload }) => {
+        state.status = asyncStatus.SUCCEEDED;
+        state.statCards = payload?.data?.statCards || null;
+        state.recentActivity = payload?.data?.recentActivity || null;
+        state.charts = payload?.data?.charts || null;
       })
-      .addCase(getDashboardAsync.rejected, (state, { payload }) => {
-        state.get_status = asyncStatus.ERROR;
-        state.get_error = payload;
+      .addCase(getDashboardSummaryAsync.rejected, (state, { payload }) => {
+        state.status = asyncStatus.ERROR;
+        state.error = payload;
       });
   },
 });
 
-export const { resetDashboardStatus } = dashboardSlice.actions;
 export default dashboardSlice.reducer;

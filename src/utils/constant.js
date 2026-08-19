@@ -12,7 +12,7 @@ export const typeConstants = {
   LOGOUT_AUTH: 'LOGOUT_AUTH',
 
   // ── Dashboard ──
-  GET_DASHBOARD: 'GET_DASHBOARD',
+  GET_DASHBOARD_SUMMARY: "dashboard/get",
 
   // ── Users ──
   GET_EMPLOYERS: 'GET_EMPLOYERS',

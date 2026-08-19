@@ -1,16 +1,17 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { typeConstants } from "../../utils/constant";
 import { apiHandle } from "../../utils/apiHandle";
+import { typeConstants } from "../../utils/constant";
 
-// ─── THUNK ───────────────────────────────────────────────────
-export const getDashboardAsync = createAsyncThunk(
-  typeConstants.GET_DASHBOARD,
+export const getDashboardSummaryAsync = createAsyncThunk(
+  typeConstants.GET_DASHBOARD_SUMMARY,
   async (_, { rejectWithValue }) => {
     try {
-      const response = await apiHandle.get("/dashboard");
+      const response = await apiHandle.get("/dashboard-summary");
       return response.data;
     } catch (error) {
-      return rejectWithValue(error?.response?.data?.message || error?.message || 'Failed to load dashboard');
+      return rejectWithValue(
+        error?.response?.data?.message || error?.message || "Failed to load dashboard",
+      );
     }
-  }
+  },
 );
