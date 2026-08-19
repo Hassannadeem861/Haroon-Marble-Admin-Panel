@@ -4,7 +4,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import {
   LayoutDashboard,
   Users,
-  UserCheck,
+  ClipboardCheck,
   GitMerge,
   MessageSquare,
   Settings,
@@ -14,8 +14,9 @@ import {
   User,
   Menu,
   ChevronRight,
-  ClipboardList,
-  Factory
+  Factory,
+  MapPin,
+  ReceiptText,
 } from "lucide-react";
 import { logout } from "../store/slices/authSlice";
 import { asyncStatus } from "../utils/asyncStatus";
@@ -41,11 +42,11 @@ const NAV_SECTIONS = [
   {
     label: "Management",
     items: [
-      { key: 'users',  Icon: UserCheck, label: 'Users',  path: '/users' },
-      { key: 'dailyWork',  Icon: Factory, label: 'Daily Work',  path: '/daily-work' },
+      { key: 'users',  Icon: Users, label: 'Users',  path: '/users' },
+      { key: 'dailyWork',  Icon: ClipboardCheck, label: 'Daily Work',  path: '/daily-work' },
       { key: 'factoryWork',  Icon: Factory, label: 'Factory Work',  path: '/factory-work' },
-      { key: 'salarySlip',  Icon: ClipboardList, label: 'Salary Slip',  path: '/salary-slip' },
-      { key: 'site',  Icon: Factory, label: 'Site',  path: '/site' },
+      { key: 'site',  Icon: MapPin, label: 'Site',  path: '/site' },
+      { key: 'salarySlip',  Icon: ReceiptText, label: 'Salary Slip',  path: '/salary-slip' },
     ],
   },
   // {
