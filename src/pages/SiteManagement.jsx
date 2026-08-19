@@ -78,6 +78,39 @@ const CATEGORY_OPTIONS = [
   { value: "other", label: "Other" },
 ];
 
+const CITY_OPTIONS = [
+  "Karachi",
+  "Lahore",
+  "Islamabad",
+  "Rawalpindi",
+  "Faisalabad",
+  "Multan",
+  "Peshawar",
+  "Quetta",
+  "Gujranwala",
+  "Sialkot",
+  "Bahawalpur",
+  "Sargodha",
+  "Sukkur",
+  "Larkana",
+  "Hyderabad",
+  "Abbottabad",
+  "Mardan",
+  "Mingora",
+  "Wah Cantonment",
+  "Gujrat",
+  "Jhelum",
+  "Sheikhupura",
+  "Kasur",
+  "Sahiwal",
+  "Okara",
+  "Rahim Yar Khan",
+  "Dera Ghazi Khan",
+  "Muzaffarabad",
+  "Gilgit",
+  "Skardu",
+].map((city) => ({ value: city, label: city }));
+
 const BROUGHT_BY_OPTIONS = [
   { value: "owner", label: "Owner" },
   { value: "company", label: "Company" },
@@ -903,11 +936,17 @@ const SiteManagement = () => {
       >
         <Form form={form} layout="vertical" onFinish={handleSubmit}>
           <div className="sm-form-grid">
-            <Form.Item label="Name" name="name" rules={[{ required: true, message: "Name is required" }]}>
+            <Form.Item label="Site Name" name="name" rules={[{ required: true, message: "Name is required" }]}>
               <Input placeholder="e.g. DHA Phase 6 — Villa 12" />
             </Form.Item>
-            <Form.Item label="Location" name="location">
-              <Input placeholder="e.g. Karachi" />
+            <Form.Item label="Select City" name="location">
+              <Select
+                showSearch
+                allowClear
+                placeholder="Search or select a city"
+                options={CITY_OPTIONS}
+                optionFilterProp="label"
+              />
             </Form.Item>
             <Form.Item label="Owner / Client Name" name="ownerName">
               <Input placeholder="e.g. Mr. Ahmed" />
