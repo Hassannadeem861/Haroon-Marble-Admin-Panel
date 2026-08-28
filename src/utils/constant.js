@@ -60,4 +60,12 @@ export const typeConstants = {
   UPDATE_SITE_MATERIAL: "siteMaterial/update",
   DELETE_SITE_MATERIAL: "siteMaterial/delete",
 
+  // work order
+  GET_WORK_ORDERS: "workOrder/getWorkOrders",
+  GET_SINGLE_WORK_ORDER: "workOrder/getSingleWorkOrder",
+  CREATE_WORK_ORDER: "workOrder/createWorkOrder",
+  UPDATE_WORK_ORDER: "workOrder/updateWorkOrder",
+  DELETE_WORK_ORDER: "workOrder/deleteWorkOrder",
+  
+
 };

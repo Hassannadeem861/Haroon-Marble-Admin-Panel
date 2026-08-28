@@ -22,6 +22,7 @@ import "./App.css";
 import DailyWorkManagement from "./pages/DailyWorkManagement.jsx";
 import SalarySlip from "./pages/SalarySlip.jsx";
 import SiteManagement from "./pages/SiteManagement.jsx";
+import WorkerOrderManagement from "./pages/workOrderManagment.jsx";
 
 const AppRoutes = () => {
   return (
@@ -69,6 +70,16 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       />
+      <Route
+        path="/work-order"
+        element={
+          <ProtectedRoute>
+            <AdminLayout>
+              <WorkerOrderManagement />
+            </AdminLayout>
+          </ProtectedRoute>
+        }
+      />
 
       {/* ========== REDIRECTS ========== */}
       <Route path="/" element={<Navigate to="/dashboard" replace />} />
@@ -107,7 +118,6 @@ const AppRoutes = () => {
         }
       />
 
-
       <Route
         path="/factory-work/:workId"
         element={
@@ -140,7 +150,6 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       />
-
     </Routes>
   );
 };
