@@ -20,6 +20,7 @@ import PublicRoute from "./routes/PublicRoutes.jsx";
 import { ScrollToTop } from "./components/ScrollToTop";
 import "./App.css";
 import DailyWorkManagement from "./pages/DailyWorkManagement.jsx";
+import BulkDailyWorkAdd from "./pages/BulkDailyWorkAdd.jsx";
 import SalarySlip from "./pages/SalarySlip.jsx";
 import SiteManagement from "./pages/SiteManagement.jsx";
 import WorkerOrderManagement from "./pages/workOrderManagment.jsx";
@@ -102,6 +103,17 @@ const AppRoutes = () => {
           <ProtectedRoute>
             <AdminLayout>
               <DailyWorkManagement />
+            </AdminLayout>
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/daily-work/bulk-add"
+        element={
+          <ProtectedRoute>
+            <AdminLayout>
+              <BulkDailyWorkAdd />
             </AdminLayout>
           </ProtectedRoute>
         }
