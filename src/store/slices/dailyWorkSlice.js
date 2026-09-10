@@ -4,6 +4,7 @@ import {
   getWorkersListAsync,
   getDailyWorksAsync,
   createDailyWorkAsync,
+  bulkCreateDailyWorkAsync,
   updateDailyWorkAsync,
   deleteDailyWorkAsync,
 } from "../services/dailyWorkService.js";
@@ -21,6 +22,9 @@ const initialState = {
   create_status: asyncStatus.IDLE,
   create_error: null,
 
+  bulkCreate_status: asyncStatus.IDLE,
+  bulkCreate_error: null,
+
   update_status: asyncStatus.IDLE,
   update_error: null,
 
@@ -35,6 +39,10 @@ const dailyWorkSlice = createSlice({
     resetDailyWorkCreateStatus: (state) => {
       state.create_status = asyncStatus.IDLE;
       state.create_error = null;
+    },
+    resetDailyWorkBulkCreateStatus: (state) => {
+      state.bulkCreate_status = asyncStatus.IDLE;
+      state.bulkCreate_error = null;
     },
     resetDailyWorkUpdateStatus: (state) => {
       state.update_status = asyncStatus.IDLE;
@@ -89,6 +97,19 @@ const dailyWorkSlice = createSlice({
       });
 
     builder
+      .addCase(bulkCreateDailyWorkAsync.pending, (state) => {
+        state.bulkCreate_status = asyncStatus.LOADING;
+        state.bulkCreate_error = null;
+      })
+      .addCase(bulkCreateDailyWorkAsync.fulfilled, (state) => {
+        state.bulkCreate_status = asyncStatus.SUCCEEDED;
+      })
+      .addCase(bulkCreateDailyWorkAsync.rejected, (state, { payload }) => {
+        state.bulkCreate_status = asyncStatus.ERROR;
+        state.bulkCreate_error = payload;
+      });
+
+    builder
       .addCase(updateDailyWorkAsync.pending, (state) => {
         state.update_status = asyncStatus.LOADING;
         state.update_error = null;
@@ -124,6 +145,7 @@ const dailyWorkSlice = createSlice({
 
 export const {
   resetDailyWorkCreateStatus,
+  resetDailyWorkBulkCreateStatus,
   resetDailyWorkUpdateStatus,
   resetDailyWorkDeleteStatus,
 } = dailyWorkSlice.actions;

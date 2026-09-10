@@ -247,41 +247,37 @@ const SalarySlip = () => {
                         <th>Salary</th>
                         <th>Overtime</th>
                         <th>Advance</th>
-                        <th>Net Salary</th>
+                        <th>Description</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {slip.entries.map((e) => {
-                        const net = (e.salary || 0) + (e.overtimeAmount || 0) - (e.advanceAmount || 0);
-                        //   console.log("net", net, e.salary, e.overtimeAmount, e.advanceAmount);
-                        return (
-                          <tr key={e._id}>
-                            <td>{e.entryDate}</td>
-                            <td>{e.currentSite || "—"}</td>
-                            <td>
-                              <span
-                                className={`ssp-tag ssp-tag--${e.attendance}`}
-                              >
-                                {ATTENDANCE_LABEL[e.attendance] || e.attendance}
-                              </span>
-                            </td>
-                            <td>
-                              <span
-                                className={`ssp-tag ssp-tag--${e.workUnder}`}
-                              >
-                                {WORK_UNDER_LABEL[e.workUnder] || e.workUnder}
-                              </span>
-                            </td>
-                            <td>{money(e.salary)}</td>
-                            <td>
-                              {e.overtimeHours || 0} hrs /{" "}
-                              {money(e.overtimeAmount)}
-                            </td>
-                            <td>{money(e.advanceAmount)}</td>
-                            <td className="ssp-net-cell">{money(net)}</td>
-                          </tr>
-                        );
-                      })}
+                      {slip.entries.map((e) => (
+                        <tr key={e._id}>
+                          <td>{e.entryDate}</td>
+                          <td>{e.currentSite || "—"}</td>
+                          <td>
+                            <span
+                              className={`ssp-tag ssp-tag--${e.attendance}`}
+                            >
+                              {ATTENDANCE_LABEL[e.attendance] || e.attendance}
+                            </span>
+                          </td>
+                          <td>
+                            <span
+                              className={`ssp-tag ssp-tag--${e.workUnder}`}
+                            >
+                              {WORK_UNDER_LABEL[e.workUnder] || e.workUnder}
+                            </span>
+                          </td>
+                          <td>{money(e.salary)}</td>
+                          <td>
+                            {e.overtimeHours || 0} hrs /{" "}
+                            {money(e.overtimeAmount)}
+                          </td>
+                          <td>{money(e.advanceAmount)}</td>
+                          <td>{e.description || "—"}</td>
+                        </tr>
+                      ))}
                     </tbody>
                   </table>
                 // </div>

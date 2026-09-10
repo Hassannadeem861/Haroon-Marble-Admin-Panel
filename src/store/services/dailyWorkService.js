@@ -58,6 +58,20 @@ export const createDailyWorkAsync = createAsyncThunk(
   },
 );
 
+export const bulkCreateDailyWorkAsync = createAsyncThunk(
+  typeConstants.BULK_CREATE_DAILY_WORK,
+  async (payload, { rejectWithValue }) => {
+    try {
+      const response = await apiHandle.post("/bulk-create-daily-work", payload);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error?.response?.data?.message || error?.message || "Failed to create daily work entries",
+      );
+    }
+  },
+);
+
 export const updateDailyWorkAsync = createAsyncThunk(
   typeConstants.UPDATE_DAILY_WORK,
   async ({ id, ...payload }, { rejectWithValue }) => {

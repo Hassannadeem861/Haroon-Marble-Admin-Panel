@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import {
   Table,
   Tag,
@@ -143,6 +144,7 @@ const DailyWorkCard = ({ record, onEdit, onDelete, deleting }) => (
 // =====================================================================
 const DailyWorkManagement = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { entries = [], pagination = {}, get_status, get_error: error, workersList = [] } =
     useSelector((state) => state.dailyWork || {});
   const { total = 0 } = pagination;
@@ -344,9 +346,14 @@ const DailyWorkManagement = () => {
             <span className="dw-subtitle">Add each worker's day — site, attendance, overtime, advance</span>
           </div>
         </div>
-        <Button type="primary" icon={<PlusOutlined />} className="dw-add-btn" onClick={openAddModal}>
-          Add Daily Entry
-        </Button>
+        <div className="dw-header-actions">
+          <Button icon={<PlusOutlined />} className="dw-add-btn" onClick={() => navigate("/daily-work/bulk-add")}>
+            Add for Multiple Days
+          </Button>
+          <Button type="primary" icon={<PlusOutlined />} className="dw-add-btn" onClick={openAddModal}>
+            Add Daily Entry
+          </Button>
+        </div>
       </div>
 
       {error && (
