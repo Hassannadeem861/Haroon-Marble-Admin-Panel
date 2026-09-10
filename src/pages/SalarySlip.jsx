@@ -12,10 +12,9 @@ import {
 } from "antd";
 import { DownloadOutlined, PrinterOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
-import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
 import { getWorkersListAsync } from "../store/services/dailyWorkService";
 import { getSalarySlipAsync } from "../store/services/salarySlipService";
+import { usePdfDownload } from "../utils/usePdfDowload.js";
 import companyLogo from "../../public/haroon-marbles-logo.png";
 import employerSignature from "/public/signature.png";
 import "./SalarySlip.css";
@@ -49,7 +48,7 @@ const SalarySlip = () => {
   const [employerId, setEmployerId] = useState(undefined);
   const [periodType, setPeriodType] = useState("month");
   const [customRange, setCustomRange] = useState(null);
-  const [downloading, setDownloading] = useState(false);
+  const { downloadPdf, downloading } = usePdfDownload();
   const printRef = useRef(null);
 
   useEffect(() => {
@@ -79,38 +78,10 @@ const SalarySlip = () => {
     );
   };
 
-  const handleDownloadPdf = async () => {
+  const handleDownloadPdf = () => {
     if (!printRef.current || !slip) return;
-    setDownloading(true);
-    try {
-      const canvas = await html2canvas(printRef.current, {
-        scale: 2,
-        backgroundColor: "#ffffff",
-      });
-      const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF("p", "mm", "a4");
-      const pageWidth = pdf.internal.pageSize.getWidth();
-      const pageHeight = pdf.internal.pageSize.getHeight();
-      const imgHeight = (canvas.height * pageWidth) / canvas.width;
-
-      let heightLeft = imgHeight;
-      let position = 0;
-
-      pdf.addImage(imgData, "PNG", 0, position, pageWidth, imgHeight);
-      heightLeft -= pageHeight;
-
-      while (heightLeft > 0) {
-        position = heightLeft - imgHeight;
-        pdf.addPage();
-        pdf.addImage(imgData, "PNG", 0, position, pageWidth, imgHeight);
-        heightLeft -= pageHeight;
-      }
-
-      const workerName = slip?.employer?.name?.replace(/\s+/g, "-") || "worker";
-      pdf.save(`salary-slip-${workerName}-${dayjs().format("DD-MM-YYYY")}.pdf`);
-    } finally {
-      setDownloading(false);
-    }
+    const workerName = slip?.employer?.name?.replace(/\s+/g, "-") || "worker";
+    downloadPdf(printRef, `salary-slip-${workerName}-${dayjs().format("DD-MM-YYYY")}.pdf`);
   };
 
   const handlePrint = () => window.print();

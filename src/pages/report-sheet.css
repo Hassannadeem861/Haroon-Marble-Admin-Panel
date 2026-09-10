@@ -122,16 +122,14 @@
 
 /* ============ HISTORY TABLE ============ */
 .rpt-table-wrap {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
   margin-bottom: 22px;
 }
 
 .rpt-table {
   width: 100%;
-  min-width: 560px;
+  table-layout: fixed;
   border-collapse: collapse;
-  font-size: 12.5px;
+  font-size: 10.5px;
   margin-bottom: 0;
 }
 
@@ -139,17 +137,19 @@
   background: var(--navy);
   color: #fff;
   text-align: left;
-  padding: 8px 10px;
+  padding: 6px 5px;
   font-weight: 600;
-  font-size: 11px;
+  font-size: 9px;
   text-transform: uppercase;
   letter-spacing: 0.02em;
+  word-break: break-word;
 }
 
 .rpt-table tbody td {
-  padding: 8px 10px;
+  padding: 6px 5px;
   border-bottom: 1px solid var(--border);
   color: var(--navy);
+  word-break: break-word;
 }
 
 .rpt-table tbody tr:nth-child(even) {
@@ -158,15 +158,27 @@
 
 .rpt-tag {
   display: inline-block;
-  padding: 1px 8px;
-  border-radius: 20px;
+  vertical-align: middle;
+  line-height: 1;
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 700;
+  white-space: nowrap;
+  text-transform: capitalize;
 }
 
-.rpt-tag--approved { background: rgba(22, 163, 74, 0.12); color: #16A34A; }
-.rpt-tag--rejected { background: rgba(229, 72, 77, 0.12); color: #E5484D; }
-.rpt-tag--pending { background: rgba(217, 119, 6, 0.12); color: #D97706; }
+.rpt-tag--approved { color: #16A34A; }
+.rpt-tag--rejected { color: #E5484D; }
+.rpt-tag--pending { color: #D97706; }
+
+/* Status Tag (antd) in the meta grid — no background, just coloured text */
+.rpt-meta-value .ant-tag {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  font-size: 14px;
+  font-weight: 700;
+}
 
 /* ============ SIGNATURE ============ */
 .rpt-signatures {
@@ -222,6 +234,9 @@
   .rpt-meta-grid { grid-template-columns: repeat(4, 1fr); }
   .rpt-summary-grid { grid-template-columns: repeat(3, 1fr); }
   .rpt-summary-card--highlight { grid-column: auto; }
+  .rpt-table { font-size: 12.5px; }
+  .rpt-table thead th,
+  .rpt-table tbody td { padding: 8px 10px; font-size: 11px; }
 }
 
 @media (min-width: 1200px) {
