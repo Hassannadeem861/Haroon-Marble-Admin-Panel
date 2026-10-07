@@ -2,7 +2,7 @@ import React, { forwardRef } from "react";
 import dayjs from "dayjs";
 import companyLogo from "../../../public/haroon-marbles-logo.png";
 import employerSignature from "/public/signature.png";
-import { STATUS_LABEL_EN, RESPONSE_LABEL_EN, CAUSED_BY_LABEL_EN, daysTextEn } from "./workOrderConstants.js";
+import { STATUS_LABEL_EN, RESPONSE_LABEL_EN, CAUSED_BY_LABEL_EN, daysTextEn, delayTextEn } from "./workOrderConstants.js";
 import "../report-sheet.css";
 
 /**
@@ -25,7 +25,7 @@ const WorkReportSheet = forwardRef(({ workOrder, rounds = [], stats }, ref) => {
       label: "Problems Reported",
       value: `${stats?.totalIssues || 0}${stats?.openIssues ? ` (${stats.openIssues} open)` : ""}`,
     },
-    { label: "Delay from Problems (approx.)", value: daysTextEn(stats?.totalIssueDelayDays) },
+    { label: "Delay from Problems (approx.)", value: delayTextEn(stats?.totalIssueDelayDays) },
   ];
 
   return (
@@ -63,7 +63,7 @@ const WorkReportSheet = forwardRef(({ workOrder, rounds = [], stats }, ref) => {
         ))}
         <div className="rpt-summary-card rpt-summary-card--danger">
           <div className="rpt-summary-label">Delay caused by Client</div>
-          <div className="rpt-summary-value">{daysTextEn(stats?.clientCausedDelayDays)}</div>
+          <div className="rpt-summary-value">{delayTextEn(stats?.clientCausedDelayDays)}</div>
         </div>
       </div>
 
@@ -103,7 +103,7 @@ const WorkReportSheet = forwardRef(({ workOrder, rounds = [], stats }, ref) => {
 
           {round.issues?.length > 0 && (
             <div className="rpt-table-wrap">
-              <table className="rpt-table">
+              <table className="rpt-table rpt-table--stack">
                 <thead>
                   <tr>
                     <th style={{ width: "15%" }}>Date</th>
@@ -116,8 +116,8 @@ const WorkReportSheet = forwardRef(({ workOrder, rounds = [], stats }, ref) => {
                 <tbody>
                   {round.issues.map((issue) => (
                     <tr key={issue._id}>
-                      <td>{issue.issueDate}</td>
-                      <td>
+                      <td data-label="Date">{issue.issueDate}</td>
+                      <td data-label="Problem" className="rpt-cell-problem">
                         {issue.description}
                         {issue.resolutionNote && <div className="rpt-issue-note">Solution: {issue.resolutionNote}</div>}
                         {issue.images?.length > 0 && (
@@ -137,11 +137,13 @@ const WorkReportSheet = forwardRef(({ workOrder, rounds = [], stats }, ref) => {
                           </div>
                         )}
                       </td>
-                      <td className={issue.causedBy === "client" ? "rpt-cell-client" : ""}>
+                      <td data-label="Caused by" className={issue.causedBy === "client" ? "rpt-cell-client" : ""}>
                         {CAUSED_BY_LABEL_EN[issue.causedBy] || "Other"}
                       </td>
-                      <td>{issue.isResolved ? issue.resolvedDate : <span className="rpt-tag rpt-tag--rejected">Open</span>}</td>
-                      <td>{daysTextEn(issue.delayDays)}</td>
+                      <td data-label="Resolved on">
+                        {issue.isResolved ? issue.resolvedDate : <span className="rpt-tag rpt-tag--rejected">Open</span>}
+                      </td>
+                      <td data-label="Delay">{delayTextEn(issue.delayDays)}</td>
                     </tr>
                   ))}
                 </tbody>

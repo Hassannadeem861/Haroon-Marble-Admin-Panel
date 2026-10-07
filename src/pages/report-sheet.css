@@ -323,6 +323,72 @@
   font-weight: 700;
 }
 
+/* Phone par problems table → har problem ek card (label : value). 640px+ par normal table.
+   PDF hamesha desktop width par banti hai (usePdfDownload), is liye PDF mein table hi rehti hai. */
+@media (max-width: 639px) {
+  .rpt-table--stack,
+  .rpt-table--stack tbody,
+  .rpt-table--stack tr,
+  .rpt-table--stack td {
+    display: block;
+    width: 100% !important;
+  }
+
+  .rpt-table--stack thead { display: none; }
+
+  .rpt-table--stack tbody tr,
+  .rpt-table--stack tbody tr:nth-child(even) {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 4px 12px;
+    margin-bottom: 10px;
+  }
+
+  .rpt-table--stack tbody td {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 7px 0;
+    font-size: 13px;
+    text-align: right;
+  }
+
+  .rpt-table--stack tbody tr td:last-child { border-bottom: none; }
+
+  .rpt-table--stack tbody td::before {
+    content: attr(data-label);
+    flex-shrink: 0;
+    font-size: 10.5px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    text-align: left;
+  }
+
+  /* Problem ka text aur photos poori width mein, label upar */
+  .rpt-table--stack tbody td.rpt-cell-problem {
+    display: block;
+    text-align: left;
+  }
+
+  .rpt-table--stack tbody td.rpt-cell-problem::before {
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .rpt-table--stack .rpt-issue-note { font-size: 12px; }
+
+  .rpt-table--stack .rpt-issue-photos img {
+    width: 64px;
+    height: 64px;
+  }
+
+  .rpt-summary-value { word-break: break-word; }
+}
+
 /* ============ TABLET / DESKTOP ============ */
 @media (min-width: 640px) {
   .rpt-sheet { padding: 32px 40px; }
