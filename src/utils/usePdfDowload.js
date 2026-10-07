@@ -38,11 +38,26 @@ export const usePdfDownload = () => {
     });
 
     try {
+      // Clickable areas: [data-pdf-link] wale elements (e.g. photo thumbnails) ki position
+      // capture se pehle note karo, taake PDF mein unpar asal link lag sake.
+      const rootRect = elementRef.current.getBoundingClientRect();
+      const linkBoxes = Array.from(elementRef.current.querySelectorAll("[data-pdf-link]")).map((el) => {
+        const r = el.getBoundingClientRect();
+        return {
+          url: el.getAttribute("data-pdf-link"),
+          left: r.left - rootRect.left,
+          top: r.top - rootRect.top,
+          width: r.width,
+          height: r.height,
+        };
+      });
+
       const canvas = await html2canvas(elementRef.current, {
         scale: 2,
         backgroundColor: "#ffffff",
         useCORS: true,
       });
+      const canvasPerCssPx = canvas.width / rootRect.width;
 
       const ctx = canvas.getContext("2d");
       const pdf = new jsPDF("p", "mm", "a4");
@@ -115,6 +130,20 @@ export const usePdfDownload = () => {
 
         if (!isFirstPage) pdf.addPage();
         pdf.addImage(sliceImgData, "PNG", 0, 0, pageWidthMm, sliceHeightMm);
+
+        // Is page par jo clickable areas aate hain un par link lagao (page ke kinare par kat jayein to wahi tak).
+        linkBoxes.forEach((box) => {
+          const top = box.top * canvasPerCssPx;
+          const bottom = top + box.height * canvasPerCssPx;
+          if (top < renderedY || top >= breakY) return;
+          pdf.link(
+            (box.left * canvasPerCssPx) / pxPerMm,
+            (top - renderedY) / pxPerMm,
+            (box.width * canvasPerCssPx) / pxPerMm,
+            (Math.min(bottom, breakY) - top) / pxPerMm,
+            { url: box.url },
+          );
+        });
 
         renderedY = breakY;
         isFirstPage = false;

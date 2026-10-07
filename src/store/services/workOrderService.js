@@ -86,3 +86,56 @@ export const updateSampleRoundAsync = createAsyncThunk(
     }
   },
 );
+
+// ─── Site Issues (photos ke sath — multipart/form-data) ──────────
+// apiHandle ka default header JSON hai; FormData ke sath JSON header ho to axios
+// FormData ko JSON bana deta hai aur files gum ho jati hain — is liye header per-request.
+const UPLOAD_CONFIG = { headers: { "Content-Type": "multipart/form-data" }, timeout: 90000 };
+
+// fields: { workOrderId, roundId, issueDate, description, causedBy, resolvedDate, resolutionNote,
+//           removeImageIds: [], images: [File] }
+const buildIssueFormData = ({ images = [], removeImageIds, ...fields }) => {
+  const formData = new FormData();
+  Object.entries(fields).forEach(([key, value]) => {
+    if (value !== undefined && value !== null) formData.append(key, value);
+  });
+  if (removeImageIds?.length) formData.append("removeImageIds", JSON.stringify(removeImageIds));
+  images.forEach((file) => formData.append("images", file));
+  return formData;
+};
+
+export const createSiteIssueAsync = createAsyncThunk(
+  typeConstants.CREATE_SITE_ISSUE,
+  async (payload, { rejectWithValue }) => {
+    try {
+      const response = await apiHandle.post("/create-site-issue", buildIssueFormData(payload), UPLOAD_CONFIG);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error?.response?.data?.message || error?.message || "Failed to save problem");
+    }
+  },
+);
+
+export const updateSiteIssueAsync = createAsyncThunk(
+  typeConstants.UPDATE_SITE_ISSUE,
+  async ({ id, ...payload }, { rejectWithValue }) => {
+    try {
+      const response = await apiHandle.put(`/update-site-issue/${id}`, buildIssueFormData(payload), UPLOAD_CONFIG);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error?.response?.data?.message || error?.message || "Failed to update problem");
+    }
+  },
+);
+
+export const deleteSiteIssueAsync = createAsyncThunk(
+  typeConstants.DELETE_SITE_ISSUE,
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await apiHandle.delete(`/delete-site-issue/${id}`);
+      return { ...response.data, id };
+    } catch (error) {
+      return rejectWithValue(error?.response?.data?.message || error?.message || "Failed to delete problem");
+    }
+  },
+);

@@ -1,0 +1,531 @@
+/* Work Report drawer — timeline, "agla qadam", issue cards. Mobile first. */
+:root {
+  --wot-green: #16A34A;
+  --wot-green-08: rgba(22, 163, 74, 0.08);
+  --wot-red: #E5484D;
+  --wot-red-08: rgba(229, 72, 77, 0.08);
+  --wot-amber: #D97706;
+  --wot-amber-08: rgba(217, 119, 6, 0.08);
+}
+
+.wot-drawer .ant-drawer-body {
+  padding: 14px 12px 32px;
+  background: var(--bg-soft, #F7F8FC);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+/* ============ HEADER ============ */
+.wot-head {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 12px 14px;
+  margin-bottom: 12px;
+}
+
+.wot-head-line {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--navy);
+}
+
+.wot-head-label {
+  display: inline-block;
+  min-width: 48px;
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+.wot-head-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.wot-head-tags .ant-tag {
+  margin: 0;
+  font-weight: 600;
+}
+
+.wot-view-switch {
+  margin-bottom: 14px;
+}
+
+.wot-view-switch .ant-segmented-item-label {
+  min-height: 38px;
+  line-height: 38px;
+  font-weight: 600;
+}
+
+/* ============ NEXT STEP ============ */
+.wot-next {
+  background: #fff;
+  border: 1px solid var(--accent-15, rgba(56, 108, 255, 0.15));
+  border-left: 4px solid var(--accent);
+  border-radius: 14px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+.wot-next-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.wot-next .ant-btn-lg {
+  height: 48px;
+  border-radius: 10px;
+  font-weight: 700;
+}
+
+.wot-next-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.wot-next-alert {
+  margin-bottom: 10px;
+  border-radius: 10px;
+}
+
+.wot-btn-warn.ant-btn {
+  color: var(--wot-amber);
+  border-color: var(--wot-amber);
+  background: var(--wot-amber-08);
+}
+
+.wot-btn-warn.ant-btn:hover {
+  color: #fff !important;
+  background: var(--wot-amber) !important;
+  border-color: var(--wot-amber) !important;
+}
+
+/* ============ STATS ============ */
+.wot-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.wot-stat {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.wot-stat span {
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+.wot-stat strong {
+  font-size: 16px;
+  color: var(--navy);
+}
+
+.wot-stat--danger {
+  grid-column: 1 / -1;
+  background: var(--wot-red-08);
+  border-color: rgba(229, 72, 77, 0.35);
+}
+
+.wot-stat--danger strong {
+  color: var(--wot-red);
+}
+
+/* ============ ROUND + STEPS ============ */
+.wot-round {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px 12px 6px;
+  margin-bottom: 12px;
+}
+
+.wot-round-title {
+  font-weight: 800;
+  color: var(--navy);
+  font-size: 15px;
+  margin-bottom: 12px;
+}
+
+.wot-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.wot-step {
+  position: relative;
+  display: flex;
+  gap: 12px;
+  padding-bottom: 18px;
+}
+
+/* line connecting the dots */
+.wot-step::before {
+  content: "";
+  position: absolute;
+  left: 13px;
+  top: 30px;
+  bottom: 2px;
+  width: 2px;
+  background: var(--border);
+}
+
+.wot-step:last-child::before {
+  display: none;
+}
+
+.wot-step-dot {
+  flex: 0 0 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  background: var(--bg-soft, #F7F8FC);
+  border: 2px solid var(--border);
+  color: var(--muted);
+  z-index: 1;
+}
+
+.wot-step--done .wot-step-dot {
+  background: var(--wot-green);
+  border-color: var(--wot-green);
+  color: #fff;
+}
+
+.wot-step--done::before {
+  background: var(--wot-green);
+}
+
+.wot-step--warn .wot-step-dot {
+  background: var(--wot-amber);
+  border-color: var(--wot-amber);
+  color: #fff;
+}
+
+.wot-step--danger .wot-step-dot {
+  background: var(--wot-red);
+  border-color: var(--wot-red);
+  color: #fff;
+}
+
+.wot-step-content {
+  flex: 1;
+  min-width: 0;
+  padding-top: 3px;
+}
+
+.wot-step-title {
+  font-weight: 700;
+  color: var(--navy);
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.wot-step-date {
+  font-size: 13px;
+  color: var(--navy);
+}
+
+.wot-step-note {
+  font-size: 12.5px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+.wot-step-note--reject {
+  color: var(--wot-red);
+}
+
+.wot-add-issue-btn.ant-btn {
+  margin-top: 6px;
+  height: 42px;
+  border-style: dashed;
+  border-radius: 10px;
+  color: var(--wot-amber);
+  border-color: var(--wot-amber);
+  font-weight: 600;
+}
+
+/* ============ ISSUE CARD ============ */
+.wot-issue {
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--wot-amber);
+  border-radius: 12px;
+  padding: 10px 12px;
+  margin: 8px 0;
+  background: #fff;
+}
+
+.wot-issue--open {
+  border-left-color: var(--wot-red);
+  background: var(--wot-red-08);
+}
+
+.wot-issue--resolved {
+  border-left-color: var(--wot-green);
+}
+
+.wot-issue-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.wot-issue-top .ant-tag {
+  margin: 0;
+}
+
+.wot-issue-date {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.wot-issue-desc {
+  font-size: 13.5px;
+  color: var(--navy);
+  word-break: break-word;
+}
+
+.wot-issue-photos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.wot-issue-photos .ant-image,
+.wot-issue-photos .ant-image-img {
+  width: 64px !important;
+  height: 64px !important;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.wot-issue-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 8px;
+}
+
+.wot-issue-status {
+  font-size: 12.5px;
+  font-weight: 700;
+}
+
+.wot-issue-status--open { color: var(--wot-red); }
+.wot-issue-status--ok { color: var(--wot-green); }
+
+.wot-issue-note {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.wot-issue-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.wot-issue-actions .ant-btn {
+  border-radius: 9px;
+  font-weight: 600;
+}
+
+.wot-issue-actions .ant-btn-primary {
+  flex: 1;
+  background: var(--wot-green);
+}
+
+.wot-history {
+  margin-bottom: 12px;
+  background: #fff;
+  border-radius: 14px;
+}
+
+/* ============ MODALS ============ */
+.wot-modal .ant-modal-title {
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.wot-modal .ant-btn-lg {
+  height: 48px;
+  border-radius: 10px;
+  font-weight: 700;
+}
+
+.wot-modal-alert {
+  margin-bottom: 14px;
+  border-radius: 10px;
+}
+
+.wot-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.wot-chip {
+  border: 1px solid var(--border);
+  background: var(--bg-soft, #F7F8FC);
+  color: var(--navy);
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.wot-chip:active,
+.wot-chip:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.wot-radio-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.wot-radio-wrap .ant-radio-button-wrapper {
+  border-radius: 8px !important;
+  border-inline-start-width: 1px;
+  height: 38px;
+  line-height: 36px;
+}
+
+.wot-radio-wrap .ant-radio-button-wrapper::before {
+  display: none !important;
+}
+
+.wot-response-group {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  width: 100%;
+}
+
+.wot-response-btn.ant-radio-button-wrapper {
+  height: 52px;
+  line-height: 50px;
+  text-align: center;
+  border-radius: 10px !important;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.wot-response-btn.ant-radio-button-wrapper::before {
+  display: none !important;
+}
+
+.wot-response-btn--approve.ant-radio-button-wrapper-checked {
+  background: var(--wot-green) !important;
+  border-color: var(--wot-green) !important;
+  color: #fff !important;
+}
+
+.wot-response-btn--reject.ant-radio-button-wrapper-checked {
+  background: var(--wot-red) !important;
+  border-color: var(--wot-red) !important;
+  color: #fff !important;
+}
+
+.wot-photo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.wot-photo {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.wot-photo .ant-image,
+.wot-photo .ant-image-img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover;
+}
+
+.wot-photo-remove {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(12, 16, 54, 0.75);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.wot-photo-add {
+  aspect-ratio: 1 / 1;
+  border: 2px dashed var(--accent);
+  border-radius: 10px;
+  background: var(--accent-08);
+  color: var(--accent);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.wot-photo-add span {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* ============ TABLET (>= 640px) ============ */
+@media (min-width: 640px) {
+  .wot-drawer .ant-drawer-body { padding: 18px 20px 32px; }
+  .wot-head { flex-direction: row; justify-content: space-between; align-items: center; }
+  .wot-head-tags { justify-content: flex-end; }
+  .wot-next-actions { flex-direction: row; }
+  .wot-stats { grid-template-columns: repeat(3, 1fr); }
+  .wot-stat--danger { grid-column: auto; }
+  .wot-photo-grid { grid-template-columns: repeat(5, 1fr); }
+  .wot-issue-photos .ant-image,
+  .wot-issue-photos .ant-image-img { width: 80px !important; height: 80px !important; }
+}

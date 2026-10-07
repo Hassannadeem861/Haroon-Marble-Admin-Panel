@@ -67,6 +67,10 @@ export const typeConstants = {
   CREATE_WORK_ORDER: "workOrder/createWorkOrder",
   UPDATE_WORK_ORDER: "workOrder/updateWorkOrder",
   DELETE_WORK_ORDER: "workOrder/deleteWorkOrder",
-  
+  CREATE_SAMPLE_ROUND: "workOrder/createSampleRound",
+  UPDATE_SAMPLE_ROUND: "workOrder/updateSampleRound",
+  CREATE_SITE_ISSUE: "workOrder/createSiteIssue",
+  UPDATE_SITE_ISSUE: "workOrder/updateSiteIssue",
+  DELETE_SITE_ISSUE: "workOrder/deleteSiteIssue",
 
 };

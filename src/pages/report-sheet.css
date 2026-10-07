@@ -226,6 +226,103 @@
   margin-top: 24px;
 }
 
+/* ============ WORK REPORT: rounds + problems ============ */
+.rpt-summary-card--danger {
+  grid-column: 1 / -1;
+  background: rgba(229, 72, 77, 0.08);
+  border-color: #E5484D;
+}
+
+.rpt-summary-card--danger .rpt-summary-value {
+  color: #E5484D;
+  font-size: 17px;
+}
+
+.rpt-empty {
+  text-align: center;
+  color: var(--muted);
+  font-size: 13px;
+  padding: 16px 0;
+}
+
+.rpt-round {
+  margin-bottom: 22px;
+}
+
+.rpt-round .rpt-section-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 6px;
+}
+
+.rpt-round-dates {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 16px;
+  margin-bottom: 12px;
+  font-size: 13px;
+  color: var(--navy);
+}
+
+.rpt-round-dates > div {
+  display: flex;
+  flex-direction: column;
+}
+
+.rpt-note {
+  font-size: 12px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.rpt-note--reject {
+  background: rgba(229, 72, 77, 0.08);
+  color: #B42318;
+}
+
+.rpt-issue-note {
+  font-size: 10px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.rpt-issue-photos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.rpt-issue-photos a {
+  display: block;
+  line-height: 0;
+  cursor: zoom-in;
+}
+
+.rpt-issue-photos img {
+  width: 54px;
+  height: 54px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+}
+
+.rpt-photo-hint {
+  font-size: 11px;
+  color: var(--muted);
+  text-align: center;
+  margin-top: 4px;
+}
+
+.rpt-cell-client {
+  color: #E5484D !important;
+  font-weight: 700;
+}
+
 /* ============ TABLET / DESKTOP ============ */
 @media (min-width: 640px) {
   .rpt-sheet { padding: 32px 40px; }
@@ -234,6 +331,9 @@
   .rpt-meta-grid { grid-template-columns: repeat(4, 1fr); }
   .rpt-summary-grid { grid-template-columns: repeat(3, 1fr); }
   .rpt-summary-card--highlight { grid-column: auto; }
+  .rpt-summary-card--danger { grid-column: 1 / -1; }
+  .rpt-round-dates { grid-template-columns: repeat(4, 1fr); }
+  .rpt-issue-photos img { width: 70px; height: 70px; }
   .rpt-table { font-size: 12.5px; }
   .rpt-table thead th,
   .rpt-table tbody td { padding: 8px 10px; font-size: 11px; }
