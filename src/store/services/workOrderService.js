@@ -139,3 +139,41 @@ export const deleteSiteIssueAsync = createAsyncThunk(
     }
   },
 );
+
+// ─── Roz ka kaam (WorkDay) — round ke andar ek din ki entry ──────
+// payload: { workOrderId, roundId, date: "DD/MM/YYYY", note }
+export const createWorkDayAsync = createAsyncThunk(
+  typeConstants.CREATE_WORK_DAY,
+  async (payload, { rejectWithValue }) => {
+    try {
+      const response = await apiHandle.post("/create-work-day", payload);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error?.response?.data?.message || error?.message || "Failed to add work day");
+    }
+  },
+);
+
+export const updateWorkDayAsync = createAsyncThunk(
+  typeConstants.UPDATE_WORK_DAY,
+  async ({ id, ...payload }, { rejectWithValue }) => {
+    try {
+      const response = await apiHandle.put(`/update-work-day/${id}`, payload);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error?.response?.data?.message || error?.message || "Failed to update work day");
+    }
+  },
+);
+
+export const deleteWorkDayAsync = createAsyncThunk(
+  typeConstants.DELETE_WORK_DAY,
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await apiHandle.delete(`/delete-work-day/${id}`);
+      return { ...response.data, id };
+    } catch (error) {
+      return rejectWithValue(error?.response?.data?.message || error?.message || "Failed to delete work day");
+    }
+  },
+);

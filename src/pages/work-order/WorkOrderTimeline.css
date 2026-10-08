@@ -142,7 +142,6 @@
 }
 
 .wot-stat--danger {
-  grid-column: 1 / -1;
   background: var(--wot-red-08);
   border-color: rgba(229, 72, 77, 0.35);
 }
@@ -271,6 +270,54 @@
 }
 
 /* ============ ISSUE CARD ============ */
+/* Roz ka kaam — har din ek line */
+.wot-days {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.wot-day {
+  position: relative;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: 12px;
+  padding: 8px 12px;
+  margin: 8px 0;
+  background: #fff;
+}
+
+.wot-day-main {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding-right: 64px;
+}
+
+.wot-day-date {
+  font-weight: 700;
+  color: var(--navy);
+  margin-right: 2px;
+}
+
+.wot-day-main .ant-tag { margin: 0; }
+
+.wot-day-note {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 4px;
+  word-break: break-word;
+}
+
+.wot-day-actions {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  display: flex;
+  gap: 4px;
+}
+
 .wot-issue {
   border: 1px solid var(--border);
   border-left: 4px solid var(--wot-amber);
@@ -523,8 +570,7 @@
   .wot-head { flex-direction: row; justify-content: space-between; align-items: center; }
   .wot-head-tags { justify-content: flex-end; }
   .wot-next-actions { flex-direction: row; }
-  .wot-stats { grid-template-columns: repeat(3, 1fr); }
-  .wot-stat--danger { grid-column: auto; }
+  .wot-stats { grid-template-columns: repeat(4, 1fr); }
   .wot-photo-grid { grid-template-columns: repeat(5, 1fr); }
   .wot-issue-photos .ant-image,
   .wot-issue-photos .ant-image-img { width: 80px !important; height: 80px !important; }

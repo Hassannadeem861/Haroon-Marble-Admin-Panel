@@ -6,8 +6,12 @@ import toast from "react-hot-toast";
 import { getErrorMessage } from "../../utils/toastError.js";
 import { roundLabel } from "./workOrderConstants.js";
 
-const notFuture = (minDate) => (d) =>
-  d && (d > dayjs().endOf("day") || (minDate && d < dayjs(minDate, "DD/MM/YYYY").startOf("day")));
+// maxDate (optional) aaj se pehle ho to wahi aakhri din — e.g. kaam mukammal ke baad ka din nahi.
+const notFuture = (minDate, maxDate) => (d) =>
+  d &&
+  (d > dayjs().endOf("day") ||
+    (minDate && d < dayjs(minDate, "DD/MM/YYYY").startOf("day")) ||
+    (maxDate && d > dayjs(maxDate, "DD/MM/YYYY").endOf("day")));
 
 // onSubmit errors (thunk .unwrap()) yahin toast ho jate hain — caller ko sirf kaam karna hai.
 const useSubmit = (onSubmit, onClose, successMessage) => {
@@ -29,7 +33,8 @@ const useSubmit = (onSubmit, onClose, successMessage) => {
 };
 
 /**
- * Ek date + optional note wala simple modal — "Kaam Shuru", "Kaam Mukammal", "Problem Hal Ho Gayi".
+ * Ek date + optional note wala simple modal — "Kaam Shuru", "Kaam Mukammal", "Problem Hal Ho Gayi",
+ * "Kaam ka Din". Edit ke liye initialDate ("DD/MM/YYYY") / initialNote do.
  * onSubmit({ date: "DD/MM/YYYY", note }) ko Promise return karna chahiye.
  */
 export const DateNoteModal = ({
@@ -43,6 +48,9 @@ export const DateNoteModal = ({
   okText,
   successMessage,
   minDate,
+  maxDate,
+  initialDate,
+  initialNote,
   warning,
 }) => {
   const { submit, submitting } = useSubmit(
@@ -54,9 +62,17 @@ export const DateNoteModal = ({
   return (
     <Modal open={open} onCancel={onClose} title={title} footer={null} destroyOnHidden className="wot-modal">
       {warning && <Alert type="warning" showIcon message={warning} className="wot-modal-alert" />}
-      <Form layout="vertical" onFinish={submit} requiredMark={false} initialValues={{ date: dayjs() }}>
+      <Form
+        layout="vertical"
+        onFinish={submit}
+        requiredMark={false}
+        initialValues={{
+          date: initialDate ? dayjs(initialDate, "DD/MM/YYYY") : dayjs(),
+          note: initialNote || "",
+        }}
+      >
         <Form.Item label={dateLabel} name="date" rules={[{ required: true, message: "Date chunein" }]}>
-          <DatePicker style={{ width: "100%" }} format="DD/MM/YYYY" inputReadOnly disabledDate={notFuture(minDate)} />
+          <DatePicker style={{ width: "100%" }} format="DD/MM/YYYY" inputReadOnly disabledDate={notFuture(minDate, maxDate)} />
         </Form.Item>
         {noteLabel && (
           <Form.Item label={noteLabel} name="note">

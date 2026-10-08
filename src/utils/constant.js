@@ -72,5 +72,8 @@ export const typeConstants = {
   CREATE_SITE_ISSUE: "workOrder/createSiteIssue",
   UPDATE_SITE_ISSUE: "workOrder/updateSiteIssue",
   DELETE_SITE_ISSUE: "workOrder/deleteSiteIssue",
+  CREATE_WORK_DAY: "workOrder/createWorkDay",
+  UPDATE_WORK_DAY: "workOrder/updateWorkDay",
+  DELETE_WORK_DAY: "workOrder/deleteWorkDay",
 
 };
