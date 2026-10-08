@@ -13,6 +13,7 @@ import {
   DeleteOutlined,
   FileTextOutlined,
   ClockCircleOutlined,
+  CalendarOutlined,
 } from "@ant-design/icons";
 import dayjs from "dayjs";
 import toast from "react-hot-toast";
@@ -22,6 +23,9 @@ import {
   updateSampleRoundAsync,
   updateSiteIssueAsync,
   deleteSiteIssueAsync,
+  createWorkDayAsync,
+  updateWorkDayAsync,
+  deleteWorkDayAsync,
 } from "../../store/services/workOrderService.js";
 import { clearSelectedWorkOrder } from "../../store/slices/workOrderSlice";
 import { usePdfDownload } from "../../utils/usePdfDowload.js";
@@ -99,11 +103,63 @@ const IssueCard = ({ issue, canEdit, onResolve, onEdit, onDelete }) => (
   </div>
 );
 
-// ─── Ek round ki timeline (Shuru → Problems → Mukammal → Client jawab) ──
-const RoundTimeline = ({ round, isLatest, cancelled, onAddIssue, onResolve, onEditIssue, onDeleteIssue }) => {
+// ─── Roz ka kaam: har din ek line — date, note, us din ki problems / hal ──
+const DailyLog = ({ round, canEdit, canAdd, onAddDay, onEditDay, onDeleteDay }) => {
+  const days = round.dailyLog || [];
+  const issues = round.issues || [];
+  return (
+    <>
+      <ul className="wot-days">
+        {days.map((day) => {
+          const raised = issues.filter((i) => i.issueDate === day.date).length;
+          const solved = issues.filter((i) => i.resolvedDate === day.date).length;
+          return (
+            <li key={day._id} className="wot-day">
+              <div className="wot-day-main">
+                <span className="wot-day-date">{day.date}</span>
+                {day.isStartDay && <Tag color="blue">Kaam shuru</Tag>}
+                {raised > 0 && <Tag color="orange">{raised} problem</Tag>}
+                {solved > 0 && <Tag color="green">{solved} hal</Tag>}
+              </div>
+              {day.note && <div className="wot-day-note">{day.note}</div>}
+              {canEdit && !day.isStartDay && (
+                <div className="wot-day-actions">
+                  <Button size="small" icon={<EditOutlined />} onClick={() => onEditDay(day, round)} aria-label="Edit" />
+                  <Popconfirm title="Ye din delete karein?" okText="Delete" okButtonProps={{ danger: true }} onConfirm={() => onDeleteDay(day)}>
+                    <Button size="small" danger icon={<DeleteOutlined />} aria-label="Delete" />
+                  </Popconfirm>
+                </div>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+      {canAdd && (
+        <Button block icon={<CalendarOutlined />} className="wot-add-issue-btn" onClick={() => onAddDay(round)}>
+          Kaam ka Din Add Karein
+        </Button>
+      )}
+    </>
+  );
+};
+
+// ─── Ek round ki timeline (Shuru → Roz ka kaam → Problems → Mukammal → Client jawab) ──
+const RoundTimeline = ({
+  round,
+  isLatest,
+  cancelled,
+  onAddIssue,
+  onResolve,
+  onEditIssue,
+  onDeleteIssue,
+  onAddDay,
+  onEditDay,
+  onDeleteDay,
+}) => {
   const canEditIssues = !cancelled && round.responseStatus !== "approved";
   const canAddIssue = !cancelled && isLatest && round.responseStatus === "pending";
   const issues = round.issues || [];
+  const dayCount = round.dailyLog?.length || 0;
 
   const steps = [
     {
@@ -115,6 +171,21 @@ const RoundTimeline = ({ round, isLatest, cancelled, onAddIssue, onResolve, onEd
           <div className="wot-step-date">{round.sampleStartDate || "—"}</div>
           {round.description && <div className="wot-step-note">{round.description}</div>}
         </>
+      ),
+    },
+    {
+      key: "days",
+      done: dayCount > 0,
+      title: `Roz ka Kaam (${dayCount} din)`,
+      body: (
+        <DailyLog
+          round={round}
+          canEdit={canEditIssues}
+          canAdd={canAddIssue}
+          onAddDay={onAddDay}
+          onEditDay={onEditDay}
+          onDeleteDay={onDeleteDay}
+        />
       ),
     },
     {
@@ -243,6 +314,23 @@ const WorkOrderDrawer = ({ open, workOrderId, onClose, onChanged }) => {
     await dispatch(updateSiteIssueAsync({ id: modal.issue._id, resolvedDate: date, resolutionNote: note })).unwrap();
     refresh();
   };
+  const saveWorkDay = async ({ date, note }) => {
+    if (modal.day) {
+      await dispatch(updateWorkDayAsync({ id: modal.day._id, date, note })).unwrap();
+    } else {
+      await dispatch(createWorkDayAsync({ workOrderId, roundId: modal.round._id, date, note })).unwrap();
+    }
+    refresh();
+  };
+  const deleteWorkDay = async (day) => {
+    try {
+      await dispatch(deleteWorkDayAsync(day._id)).unwrap();
+      toast.success("Din delete ho gaya");
+      refresh();
+    } catch (err) {
+      toast.error(getErrorMessage(err));
+    }
+  };
   const deleteIssue = async (issue) => {
     try {
       await dispatch(deleteSiteIssueAsync(issue._id)).unwrap();
@@ -274,6 +362,9 @@ const WorkOrderDrawer = ({ open, workOrderId, onClose, onChanged }) => {
       case "in_progress":
         return (
           <div className="wot-next-actions">
+            <Button size="large" block icon={<CalendarOutlined />} onClick={() => setModal({ type: "day", round: latestRound })}>
+              Kaam ka Din Add Karein
+            </Button>
             <Button size="large" block icon={<WarningOutlined />} className="wot-btn-warn" onClick={() => setModal({ type: "issue", round: latestRound })}>
               Problem Report Karein
             </Button>
@@ -329,6 +420,9 @@ const WorkOrderDrawer = ({ open, workOrderId, onClose, onChanged }) => {
     onResolve: (issue) => setModal({ type: "resolve", issue }),
     onEditIssue: (issue, round) => setModal({ type: "issue", issue, round }),
     onDeleteIssue: deleteIssue,
+    onAddDay: (round) => setModal({ type: "day", round }),
+    onEditDay: (day, round) => setModal({ type: "day", day, round }),
+    onDeleteDay: deleteWorkDay,
   };
 
   return (
@@ -378,6 +472,10 @@ const WorkOrderDrawer = ({ open, workOrderId, onClose, onChanged }) => {
                   <div className="wot-stat">
                     <span>Kul din</span>
                     <strong>{daysText(stats?.totalDurationDays)}</strong>
+                  </div>
+                  <div className="wot-stat">
+                    <span>Kaam ke din</span>
+                    <strong>{stats?.loggedWorkDays || 0}</strong>
                   </div>
                   <div className="wot-stat">
                     <span>Problems</span>
@@ -446,7 +544,7 @@ const WorkOrderDrawer = ({ open, workOrderId, onClose, onChanged }) => {
         dateLabel="Kaam kis din mukammal hua?"
         okText="Mukammal Save Karein"
         successMessage="Kaam mukammal mark ho gaya"
-        minDate={latestRound?.sampleStartDate}
+        minDate={latestRound?.dailyLog?.at(-1)?.date || latestRound?.sampleStartDate}
         warning={latestOpenIssues > 0 ? `${latestOpenIssues} problem(s) abhi jari hain — client approve se pehle inhe hal karna hoga.` : null}
       />
       <DateNoteModal
@@ -460,6 +558,21 @@ const WorkOrderDrawer = ({ open, workOrderId, onClose, onChanged }) => {
         okText="Hal Save Karein"
         successMessage="Problem hal mark ho gayi"
         minDate={modal?.issue?.issueDate}
+      />
+      <DateNoteModal
+        open={modal?.type === "day"}
+        onClose={closeModal}
+        onSubmit={saveWorkDay}
+        title={modal?.day ? "Kaam ka Din Edit Karein" : "Kaam ka Din Add Karein"}
+        dateLabel="Kis din kaam hua?"
+        noteLabel="Kya kaam hua? (optional)"
+        notePlaceholder="e.g. Kitchen ka floor laga, 3 mazdoor"
+        okText={modal?.day ? "Update Karein" : "Din Save Karein"}
+        successMessage={modal?.day ? "Din update ho gaya" : "Kaam ka din add ho gaya"}
+        minDate={modal?.round?.sampleStartDate}
+        maxDate={modal?.round?.sampleReadyDate}
+        initialDate={modal?.day?.date}
+        initialNote={modal?.day?.note}
       />
       <ClientResponseModal
         open={modal?.type === "response"}

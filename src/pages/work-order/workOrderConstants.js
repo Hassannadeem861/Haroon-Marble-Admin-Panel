@@ -69,10 +69,6 @@ export const daysTextEn = (days) => {
   if (days === 0) return "Same day";
   return `${days} day${days === 1 ? "" : "s"}`;
 };
-
-// Delay ke liye: 0 din = "No delay" ("Same day" delay ke sath ghalat lagta hai).
-export const delayTextEn = (days) => (days === 0 ? "No delay" : daysTextEn(days));
-
 // Round 1 = asal kaam, Round 2 = Rework #1, Round 3 = Rework #2 …
 export const roundLabel = (roundNumber) => (roundNumber > 1 ? `Rework #${roundNumber - 1}` : "Pehla Round");
 

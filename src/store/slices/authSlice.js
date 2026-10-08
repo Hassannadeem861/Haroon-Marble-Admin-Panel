@@ -2,27 +2,26 @@ import { createSlice } from "@reduxjs/toolkit";
 import { loginAsync, logoutAsync } from "../services/authService";
 import { asyncStatus } from "../../utils/asyncStatus";
 import { SAVE_TOKENS_CONSTANT } from "../../utils/constant";
+import { setAccessToken } from "../../utils/accessToken";
 
 // ─────────────────────────────────────────────
 // TOKEN HELPERS
-// There is no refresh token in this API — only a single access token.
+// Access token sirf memory (utils/accessToken.js) mein — ye slice redux-persist se
+// localStorage mein jata hai, is liye token yahan kabhi state mein nahi rakha jata.
+// Refresh token httpOnly cookie mein hai (JS ki pohanch se bahar).
 // ─────────────────────────────────────────────
-const saveToken = (token) => {
-  if (token) localStorage.setItem(SAVE_TOKENS_CONSTANT.ACCESS_TOKEN, token);
-};
-
 export const clearTokens = () => {
-  localStorage.removeItem(SAVE_TOKENS_CONSTANT.ACCESS_TOKEN);
+  setAccessToken(null);
+  localStorage.removeItem(SAVE_TOKENS_CONSTANT.ACCESS_TOKEN); // purane version ka token
 };
 
 // ─────────────────────────────────────────────
 // INITIAL STATE
 // ─────────────────────────────────────────────
 const initialState = {
-  // Auth
+  // Auth — user_auth persist hota hai; token reload par refresh cookie se aata hai.
   user_data: null,
-  user_auth: !!localStorage.getItem(SAVE_TOKENS_CONSTANT.ACCESS_TOKEN),
-  accessToken: localStorage.getItem(SAVE_TOKENS_CONSTANT.ACCESS_TOKEN) || null,
+  user_auth: false,
   user_role: null,
 
   // Login
@@ -52,7 +51,6 @@ const userAuthSlice = createSlice({
     logout: (state) => {
       state.user_data = null;
       state.user_auth = false;
-      state.accessToken = null;
       state.user_role = null;
       state.login_status = asyncStatus.IDLE;
       clearTokens();
@@ -73,7 +71,7 @@ const userAuthSlice = createSlice({
 
   extraReducers: (builder) => {
     // =========>>>>>>> Login <<<<<===========
-    // Real response shape: { message, user, token }
+    // Real response shape: { success, message, user, token } — token = 15 min access token.
 
     builder.addCase(loginAsync.pending, (state) => {
       state.login_status = asyncStatus.LOADING;
@@ -82,14 +80,13 @@ const userAuthSlice = createSlice({
 
     builder.addCase(loginAsync.fulfilled, (state, { payload }) => {
       state.login_status = asyncStatus.SUCCEEDED;
-      state.login_data = payload;
+      state.login_data = { message: payload?.message, user: payload?.user }; // token persist na ho
 
       if (payload?.user && payload?.token) {
         state.user_data = payload.user;
         state.user_role = payload.user?.role ?? null;
-        state.accessToken = payload.token;
         state.user_auth = true;
-        saveToken(payload.token);
+        setAccessToken(payload.token);
       }
     });
 
@@ -111,7 +108,6 @@ const userAuthSlice = createSlice({
       state.logout_auth_status = asyncStatus.SUCCEEDED;
       state.user_data = null;
       state.user_auth = false;
-      state.accessToken = null;
       state.user_role = null;
       clearTokens();
     });
@@ -121,7 +117,6 @@ const userAuthSlice = createSlice({
       state.logout_auth_error = payload;
       state.user_data = null;
       state.user_auth = false;
-      state.accessToken = null;
       clearTokens();
     });
 

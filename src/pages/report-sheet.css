@@ -226,16 +226,34 @@
   margin-top: 24px;
 }
 
-/* ============ WORK REPORT: rounds + problems ============ */
-.rpt-summary-card--danger {
-  grid-column: 1 / -1;
-  background: rgba(229, 72, 77, 0.08);
-  border-color: #E5484D;
+/* ============ WORK REPORT (client proof) ============ */
+.rpt-doc-title {
+  text-align: center;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--navy);
+  margin-bottom: 16px;
 }
 
-.rpt-summary-card--danger .rpt-summary-value {
-  color: #E5484D;
-  font-size: 17px;
+/* Client ki wajah se delay — report ki sab se ahem line */
+.rpt-alert {
+  background: rgba(229, 72, 77, 0.08);
+  border: 1px solid #E5484D;
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-bottom: 22px;
+  font-size: 14px;
+  color: #B42318;
+}
+
+.rpt-alert strong {
+  font-size: 16px;
+}
+
+.rpt-alert-sub {
+  font-size: 11.5px;
+  color: var(--muted);
+  margin-top: 2px;
 }
 
 .rpt-empty {
@@ -245,30 +263,13 @@
   padding: 16px 0;
 }
 
-.rpt-round {
-  margin-bottom: 22px;
+.rpt-block {
+  margin-bottom: 24px;
 }
 
-.rpt-round .rpt-section-title {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+.rpt-block .rpt-section-title {
   border-bottom: 1px solid var(--border);
   padding-bottom: 6px;
-}
-
-.rpt-round-dates {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px 16px;
-  margin-bottom: 12px;
-  font-size: 13px;
-  color: var(--navy);
-}
-
-.rpt-round-dates > div {
-  display: flex;
-  flex-direction: column;
 }
 
 .rpt-note {
@@ -395,10 +396,8 @@
   .rpt-header { min-height: 76px; }
   .rpt-logo { width: 250px; max-height: 76px; }
   .rpt-meta-grid { grid-template-columns: repeat(4, 1fr); }
-  .rpt-summary-grid { grid-template-columns: repeat(3, 1fr); }
+  .rpt-summary-grid { grid-template-columns: repeat(4, 1fr); }
   .rpt-summary-card--highlight { grid-column: auto; }
-  .rpt-summary-card--danger { grid-column: 1 / -1; }
-  .rpt-round-dates { grid-template-columns: repeat(4, 1fr); }
   .rpt-issue-photos img { width: 70px; height: 70px; }
   .rpt-table { font-size: 12.5px; }
   .rpt-table thead th,

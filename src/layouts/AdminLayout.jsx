@@ -18,7 +18,7 @@ import {
   MapPin,
   ReceiptText,
 } from "lucide-react";
-import { logout } from "../store/slices/authSlice";
+import { logoutAsync } from "../store/services/authService";
 import { asyncStatus } from "../utils/asyncStatus";
 import { ConfirmModal } from "../components/Modal";
 import "./AdminLayout.css";
@@ -154,10 +154,10 @@ const AdminLayout = ({ children }) => {
     else setCollapsed((p) => !p);
   };
 
-  const handleLogout = () => {
+  // Server par session band (refresh cookie bhi saaf) — fail ho to bhi local logout ho jata hai.
+  const handleLogout = async () => {
     setShowLogoutModal(false);
-    console.log("showLogoutModal: ", showLogoutModal)
-    dispatch(logout());
+    await dispatch(logoutAsync());
     navigate("/login", { replace: true });
   };
 
