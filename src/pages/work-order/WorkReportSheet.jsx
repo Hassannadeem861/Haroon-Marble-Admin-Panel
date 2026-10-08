@@ -2,30 +2,42 @@ import React, { forwardRef } from "react";
 import dayjs from "dayjs";
 import companyLogo from "../../../public/haroon-marbles-logo.png";
 import employerSignature from "/public/signature.png";
-import { STATUS_LABEL_EN, RESPONSE_LABEL_EN, CAUSED_BY_LABEL_EN, daysTextEn, delayTextEn } from "./workOrderConstants.js";
+import { STATUS_LABEL_EN, CAUSED_BY_LABEL_EN, daysTextEn } from "./workOrderConstants.js";
 import "../report-sheet.css";
 
 /**
- * Printable / PDF Work Report — client ke sath share hoti hai, is liye aasan English.
- * Proof: work kab shuru/mukammal hua, kitni problems aayin, kitne din ruka,
- * aur kitna delay client ki wajah se tha.
- * Har photo `data-pdf-link` ke sath hai — PDF mein us par tap karne se poori photo khulti hai
- * (usePdfDownload link lagata hai). Screen par bhi photo click se naye tab mein khulti hai.
+ * Printable / PDF Work Report — client (non-technical) ko proof ke taur par dikhani hai,
+ * is liye saada English aur sirf zaroori cheezein:
+ *   1. kaam kab shuru / khatam hua, kitne din laga, kitne din site par kaam hua
+ *   2. client ki wajah se kitne din ka delay (sirf agar hua)
+ *   3. problems — date, kya hua, kis ki wajah se, kab theek hui, kitne din gaye + photos
+ *   4. client ki maangi hui tabdeeliyan (reject ki wajah)
+ *   5. roz ka record (date + kya kaam hua)
+ * "Round" ka lafz client ko nahi dikhta — sab rounds ek hi list mein.
+ * Har photo `data-pdf-link` ke sath hai — PDF mein tap karne se poori photo khulti hai.
  */
+const plural = (n, word) => `${n} ${word}${n === 1 ? "" : "s"}`;
+
 const WorkReportSheet = forwardRef(({ workOrder, rounds = [], stats }, ref) => {
   const siteName = workOrder?.siteId?.name || "—";
-  const hasPhotos = rounds.some((r) => r.issues?.some((i) => i.images?.length));
+  const issues = rounds.flatMap((r) => r.issues || []);
+  const changeRequests = rounds.filter((r) => r.responseStatus === "rejected" && r.rejectionNotes);
+  const dailyRecord = rounds.flatMap((r) =>
+    (r.dailyLog || []).map((day) => ({
+      ...day,
+      text:
+        day.note ||
+        (day.isStartDay ? (r.roundNumber > 1 ? "Work restarted with client's changes" : "Work started") : "Work done"),
+    })),
+  );
+  const clientDelay = stats?.clientCausedDelayDays || 0;
+  const hasPhotos = issues.some((i) => i.images?.length);
 
   const summary = [
-    { label: "Work Started", value: stats?.workStartDate || "—" },
-    { label: "Work Completed", value: stats?.workCompletedDate || "—" },
-    { label: "Total Duration", value: daysTextEn(stats?.totalDurationDays) },
-    { label: "Attempts / Reworks", value: `${stats?.totalRounds || 0} / ${stats?.rejectedCount || 0}` },
-    {
-      label: "Problems Reported",
-      value: `${stats?.totalIssues || 0}${stats?.openIssues ? ` (${stats.openIssues} open)` : ""}`,
-    },
-    { label: "Delay from Problems (approx.)", value: delayTextEn(stats?.totalIssueDelayDays) },
+    { label: "Work started", value: stats?.workStartDate || "—" },
+    { label: "Work finished", value: stats?.workCompletedDate || "Still in progress" },
+    { label: "Total time", value: daysTextEn(stats?.totalDurationDays) },
+    { label: "Days worked on site", value: stats?.loggedWorkDays || 0 },
   ];
 
   return (
@@ -34,6 +46,8 @@ const WorkReportSheet = forwardRef(({ workOrder, rounds = [], stats }, ref) => {
         <img src={companyLogo} alt="Haroon Marbles" className="rpt-logo" />
       </div>
       <div className="rpt-divider" />
+
+      <div className="rpt-doc-title">Work Report</div>
 
       <div className="rpt-meta-grid">
         <div>
@@ -61,99 +75,104 @@ const WorkReportSheet = forwardRef(({ workOrder, rounds = [], stats }, ref) => {
             <div className="rpt-summary-value">{s.value}</div>
           </div>
         ))}
-        <div className="rpt-summary-card rpt-summary-card--danger">
-          <div className="rpt-summary-label">Delay caused by Client</div>
-          <div className="rpt-summary-value">{delayTextEn(stats?.clientCausedDelayDays)}</div>
-        </div>
       </div>
+
+      {clientDelay > 0 && (
+        <div className="rpt-alert">
+          Work was delayed by <strong>{plural(clientDelay, "day")}</strong> because of the client.
+          <div className="rpt-alert-sub">Details are in the problems list below.</div>
+        </div>
+      )}
 
       {rounds.length === 0 && <div className="rpt-empty">Work has not started yet.</div>}
 
-      {rounds.map((round) => (
-        <div className="rpt-round" key={round._id}>
-          <div className="rpt-section-title">
-            {round.roundNumber > 1 ? `Rework #${round.roundNumber - 1}` : "Work Details"}
-            <span className={`rpt-tag rpt-tag--${round.responseStatus}`}>{RESPONSE_LABEL_EN[round.responseStatus]}</span>
-          </div>
-
-          <div className="rpt-round-dates">
-            <div>
-              <span className="rpt-meta-label">Started</span>
-              <strong>{round.sampleStartDate || "—"}</strong>
-            </div>
-            <div>
-              <span className="rpt-meta-label">Completed</span>
-              <strong>{round.sampleReadyDate || "In progress"}</strong>
-            </div>
-            <div>
-              <span className="rpt-meta-label">Client Response</span>
-              <strong>{round.clientResponseDate || "—"}</strong>
-            </div>
-            <div>
-              <span className="rpt-meta-label">Working Days</span>
-              <strong>{daysTextEn(round.workDays)}</strong>
-            </div>
-          </div>
-
-          {round.rejectionNotes && (
-            <div className="rpt-note rpt-note--reject">
-              <strong>Reason for rejection:</strong> {round.rejectionNotes}
-            </div>
-          )}
-
-          {round.issues?.length > 0 && (
-            <div className="rpt-table-wrap">
-              <table className="rpt-table rpt-table--stack">
-                <thead>
-                  <tr>
-                    <th style={{ width: "15%" }}>Date</th>
-                    <th>Problem</th>
-                    <th style={{ width: "15%" }}>Caused by</th>
-                    <th style={{ width: "15%" }}>Resolved on</th>
-                    <th style={{ width: "12%" }}>Delay</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {round.issues.map((issue) => (
-                    <tr key={issue._id}>
-                      <td data-label="Date">{issue.issueDate}</td>
-                      <td data-label="Problem" className="rpt-cell-problem">
-                        {issue.description}
-                        {issue.resolutionNote && <div className="rpt-issue-note">Solution: {issue.resolutionNote}</div>}
-                        {issue.images?.length > 0 && (
-                          <div className="rpt-issue-photos">
-                            {issue.images.map((img, index) => (
-                              <a
-                                key={img._id}
-                                href={img.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                data-pdf-link={img.url}
-                                title={`Open photo ${index + 1}`}
-                              >
-                                <img src={img.url} alt={`Problem photo ${index + 1}`} crossOrigin="anonymous" />
-                              </a>
-                            ))}
-                          </div>
-                        )}
-                      </td>
-                      <td data-label="Caused by" className={issue.causedBy === "client" ? "rpt-cell-client" : ""}>
-                        {CAUSED_BY_LABEL_EN[issue.causedBy] || "Other"}
-                      </td>
-                      <td data-label="Resolved on">
-                        {issue.isResolved ? issue.resolvedDate : <span className="rpt-tag rpt-tag--rejected">Open</span>}
-                      </td>
-                      <td data-label="Delay">{delayTextEn(issue.delayDays)}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+      {/* ---- 1. Problems ---- */}
+      {issues.length > 0 && (
+        <div className="rpt-block">
+          <div className="rpt-section-title">Problems during the work</div>
+          <table className="rpt-table rpt-table--stack">
+            <thead>
+              <tr>
+                <th style={{ width: "14%" }}>Date</th>
+                <th>What happened</th>
+                <th style={{ width: "14%" }}>Because of</th>
+                <th style={{ width: "14%" }}>Fixed on</th>
+                <th style={{ width: "12%" }}>Days lost</th>
+              </tr>
+            </thead>
+            <tbody>
+              {issues.map((issue) => (
+                <tr key={issue._id}>
+                  <td data-label="Date">{issue.issueDate}</td>
+                  <td data-label="What happened" className="rpt-cell-problem">
+                    {issue.description}
+                    {issue.resolutionNote && <div className="rpt-issue-note">Fixed by: {issue.resolutionNote}</div>}
+                    {issue.images?.length > 0 && (
+                      <div className="rpt-issue-photos">
+                        {issue.images.map((img, index) => (
+                          <a
+                            key={img._id}
+                            href={img.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            data-pdf-link={img.url}
+                            title={`Open photo ${index + 1}`}
+                          >
+                            <img src={img.url} alt={`Problem photo ${index + 1}`} crossOrigin="anonymous" />
+                          </a>
+                        ))}
+                      </div>
+                    )}
+                  </td>
+                  <td data-label="Because of" className={issue.causedBy === "client" ? "rpt-cell-client" : ""}>
+                    {CAUSED_BY_LABEL_EN[issue.causedBy] || "Other"}
+                  </td>
+                  <td data-label="Fixed on">
+                    {issue.isResolved ? issue.resolvedDate : <span className="rpt-tag rpt-tag--rejected">Not fixed yet</span>}
+                  </td>
+                  <td data-label="Days lost">{issue.delayDays ? plural(issue.delayDays, "day") : "None"}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {hasPhotos && <div className="rpt-photo-hint">Tap on any photo to see it in full size.</div>}
         </div>
-      ))}
+      )}
 
-      {hasPhotos && <div className="rpt-photo-hint">Tip: Tap on any photo to open it in full size.</div>}
+      {/* ---- 2. Client ki maangi hui tabdeeliyan ---- */}
+      {changeRequests.length > 0 && (
+        <div className="rpt-block">
+          <div className="rpt-section-title">Changes asked by the client</div>
+          {changeRequests.map((r) => (
+            <div className="rpt-note rpt-note--reject" key={r._id}>
+              <strong>{r.clientResponseDate}:</strong> {r.rejectionNotes}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* ---- 3. Roz ka record ---- */}
+      {dailyRecord.length > 0 && (
+        <div className="rpt-block">
+          <div className="rpt-section-title">Daily work record</div>
+          <table className="rpt-table rpt-table--stack">
+            <thead>
+              <tr>
+                <th style={{ width: "18%" }}>Date</th>
+                <th>Work done</th>
+              </tr>
+            </thead>
+            <tbody>
+              {dailyRecord.map((day) => (
+                <tr key={day._id}>
+                  <td data-label="Date">{day.date}</td>
+                  <td data-label="Work done">{day.text}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
 
       <div className="rpt-signatures">
         <div className="rpt-signature-block">

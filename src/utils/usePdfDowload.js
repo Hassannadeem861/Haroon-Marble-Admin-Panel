@@ -30,7 +30,7 @@ import toast from "react-hot-toast";
 const PDF_RENDER_WIDTH = 800;
 const PDF_WINDOW_WIDTH = 1024;
 const PDF_BLOCK_SELECTOR =
-  "tr, img, .rpt-summary-card, .rpt-meta-grid > div, .rpt-round-dates > div, .rpt-section-title, .rpt-note, .rpt-signatures, .rpt-footer-note";
+  "tr, img, .rpt-summary-card, .rpt-meta-grid > div, .rpt-alert, .rpt-section-title, .rpt-note, .rpt-signatures, .rpt-footer-note";
 
 export const usePdfDownload = () => {
   const [downloading, setDownloading] = useState(false);
